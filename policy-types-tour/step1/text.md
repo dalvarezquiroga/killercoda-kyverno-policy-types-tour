@@ -1,5 +1,7 @@
 # Validate resources
 
+> **Docs:** [ValidatingPolicy](https://kyverno.io/docs/policy-types/validating-policy/)
+
 A **ValidatingPolicy** decides whether a resource is allowed. The action is set
 with `spec.validationActions`:
 
@@ -40,9 +42,9 @@ EOF
 
 <br>
 
-`'team' in object.metadata.?labels.orValue([])` checks whether the `team` key is
-present in the Pod labels. The optional accessor `?` with `orValue([])` returns
-an empty value instead of erroring when a Pod has no labels at all.
+The rule requires a **team** label on every Pod. Thanks to the optional accessor
+and `orValue([])`, the expression returns an empty list instead of erroring when
+a Pod has no labels at all.
 
 </details>
 
@@ -74,18 +76,20 @@ kubectl patch validatingpolicy require-team-label --type=json \
 kubectl run nginx-audit --image=nginx
 ```{{exec}}
 
-Inspect the report to find the recorded violation:
+Pods created with `kubectl run` land in the `default` namespace, and Kyverno
+records the report right there. Inspect it:
 
 ```
-kubectl get policyreport -A
+kubectl get policyreport -n default
 ```{{exec}}
 
 <details><summary>Tip: what to look for</summary>
 
 <br>
 
-The `nginx-audit` Pod is created (Audit does not block), but a `PolicyReport`
-entry with result `fail` for `require-team-label` now appears. Switch the policy
-back to `Deny` to enforce again.
+The **nginx-audit** Pod is created (Audit does not block), but a PolicyReport in
+the **default** namespace now has an entry with result `fail` for
+`require-team-label`. PolicyReports live in the same namespace as the resource
+they describe. Switch the policy back to `Deny` to enforce again.
 
 </details>

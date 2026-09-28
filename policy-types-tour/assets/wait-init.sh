@@ -5,12 +5,13 @@ rm "$0"
 
 clear
 
-echo -n "Preparing Kyverno, this takes a moment"
+echo -n "Setting up Kyverno, this takes a moment"
 while [ ! -f /ks/.initfinished ]; do
     echo -n '.'
     sleep 1
 done
+version=$(cat /ks/kyverno-version 2>/dev/null)
 echo " ready!"
 echo
-echo "Kyverno is installed and the CEL policy CRDs are registered."
-echo "Open Step 1 to start the tour."
+echo "Kyverno ${version:-v1.19} is installed and ready — CEL policy CRDs registered."
+echo "Click the START button to begin the tour."

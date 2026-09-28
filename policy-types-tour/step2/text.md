@@ -1,9 +1,11 @@
 # Mutate resources
 
+> **Docs:** [MutatingPolicy](https://kyverno.io/docs/policy-types/mutating-policy/)
+
 A **MutatingPolicy** changes resources as they are created. Patches are written
 as CEL using `patchType: ApplyConfiguration`, a merge-style `Object`.
 
-Create a policy that adds a default `foo: bar` label to every Pod:
+Create a policy that adds a friendly `hello: world` label to every Pod:
 
 ```
 cat <<EOF | kubectl apply -f -
@@ -25,7 +27,7 @@ spec:
           Object{
             metadata: Object.metadata{
               labels: Object.metadata.labels{
-                foo: "bar"
+                hello: "world"
               }
             }
           }
@@ -54,4 +56,4 @@ kubectl run nginx-mutated --image=nginx --labels=team=platform
 kubectl get pod nginx-mutated -o jsonpath='{.metadata.labels}' ; echo
 ```{{exec}}
 
-You should see `foo: bar` even though you never set it.
+You should see `hello: world` even though you never set it.

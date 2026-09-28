@@ -1,5 +1,7 @@
 # Generate resources
 
+> **Docs:** [GeneratingPolicy](https://kyverno.io/docs/policy-types/generating-policy/)
+
 A **GeneratingPolicy** creates resources in response to a trigger. Here, every
 new Namespace gets a default ConfigMap. The downstream resource is authored as a
 YAML template with CEL placeholders `(( ... ))`.

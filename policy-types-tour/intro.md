@@ -1,4 +1,5 @@
-# Kyverno Policy Types Tour (CEL)
+Welcome! In this short, hands-on tour you'll meet the three modern
+**CEL-based Kyverno policy types** and see each one in action.
 
 Kyverno is a policy engine for Kubernetes. Since 2022 it has fully adopted
 **CEL (Common Expression Language)**, the same expression language used by
@@ -25,14 +26,8 @@ The legacy types (`ClusterPolicy`, `Policy`, `CleanupPolicy` and the legacy
 | v1.19 | Aug 2026 | **Officially deprecated (last release with full support)** |
 | v1.20 | Nov 2026 (est.) | **Removed** |
 
-As of **v1.19**, creating or updating a legacy policy returns an admission
-warning, and the `kyverno_deprecated_api_requests_total` metric tracks
-deprecated API usage. The Kyverno CLI prints the same warnings and supports
-`--warnings-as-errors` for CI enforcement. See the
-[migration guide](https://kyverno.io/docs/guides/migration-to-cel#detecting-legacy-policy-usage).
-
 ## Setup
 
-Kyverno (latest, v1.19+) is being installed for you in the background so the
-stable `policies.kyverno.io/v1` CRDs are ready. The terminal shows a short
-progress indicator and completes as soon as Kyverno is up — then head to Step 1.
+Kyverno **v1.19** is being set up for you in the background so the stable
+`policies.kyverno.io/v1` CRDs are ready. Wait for the short progress indicator
+in the terminal to finish, then click **START**.
