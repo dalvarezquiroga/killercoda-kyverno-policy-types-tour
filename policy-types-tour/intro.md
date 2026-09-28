@@ -10,11 +10,11 @@ native Kubernetes admission policies.
 In this scenario you will try the three modern, CEL-based policy types
 (API group `policies.kyverno.io/v1`):
 
-| Type | What it does |
-|------|--------------|
-| **ValidatingPolicy** | Allow or block resources (`Deny` / `Audit` / `Warn`) |
-| **MutatingPolicy** | Change resources on the fly (add labels, defaults, ...) |
-| **GeneratingPolicy** | Create or clone resources from a trigger |
+| Type | What it does | Since |
+|------|--------------|-------|
+| **ValidatingPolicy** | Allow or block resources (`Deny` / `Audit` / `Warn`) | v1.14 (Apr 2025) |
+| **MutatingPolicy** | Change resources on the fly (add labels, defaults, ...) | v1.15 (Jul 2025) |
+| **GeneratingPolicy** | Create or clone resources from a trigger | v1.15 (Jul 2025) |
 
 ## Why not ClusterPolicy?
 
