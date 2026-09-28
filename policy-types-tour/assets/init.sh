@@ -1,0 +1,41 @@
+#!/bin/bash
+# Real scenario setup. Uploaded to /ks and run hidden by init/background.sh.
+# Installs Kyverno (latest, >= v1.19) for the stable CEL policy CRDs
+# (policies.kyverno.io/v1) and grants the RBAC that Step 3 needs.
+
+helm repo add kyverno https://kyverno.github.io/kyverno/ || true
+helm repo update
+
+# --wait blocks until every Kyverno component is Available. Replicas are pinned
+# to 1 because this runs on a single-node cluster.
+helm install kyverno kyverno/kyverno \
+  -n kyverno --create-namespace \
+  --wait --timeout 6m \
+  --set admissionController.replicas=1 \
+  --set backgroundController.replicas=1 \
+  --set cleanupController.replicas=1 \
+  --set reportsController.replicas=1
+
+# Step 3 generates a ConfigMap. The background controller only has read access
+# (built-in view role) by default, so aggregate write access onto its ClusterRole.
+kubectl apply -f - <<'EOF'
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: kyverno:generate-configmaps
+  labels:
+    rbac.kyverno.io/aggregate-to-background-controller: "true"
+rules:
+  - apiGroups: [""]
+    resources: ["configmaps"]
+    verbs: ["create", "update", "delete", "get", "list", "watch"]
+EOF
+
+# Make sure the CEL policy CRDs are established before the user reaches Step 1.
+kubectl wait --for=condition=established --timeout=2m \
+  crd/validatingpolicies.policies.kyverno.io \
+  crd/mutatingpolicies.policies.kyverno.io \
+  crd/generatingpolicies.policies.kyverno.io
+
+# Signal the foreground spinner that setup is complete.
+touch /ks/.initfinished
