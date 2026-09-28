@@ -1,6 +1,6 @@
 {
-  "title": "Kyverno Policy Types Tour (CEL)",
-  "description": "Learn the modern CEL-based Kyverno policy types: ValidatingPolicy, MutatingPolicy and GeneratingPolicy",
+  "title": "Kyverno Policy Types Tour",
+  "description": "Hands-on with Kyverno's modern CEL policies — validate, mutate and generate Kubernetes resources (no legacy ClusterPolicy).",
   "details": {
     "assets": {
       "host01": [

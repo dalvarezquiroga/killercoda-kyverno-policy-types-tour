@@ -1,3 +1,5 @@
+<img src="./policy-types.svg" alt="Kyverno CEL policy types: Validate, Mutate, Generate" width="100%">
+
 Welcome! In this short, hands-on tour you'll meet the three modern
 **CEL-based Kyverno policy types** and see each one in action.
 
