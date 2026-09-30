@@ -5,14 +5,8 @@ Injecting secure defaults is one of the most useful jobs of a MutatingPolicy.
 **Goal:** a `MutatingPolicy` that adds `spec.securityContext.runAsNonRoot: true`
 to **every** new Pod.
 
-A starter file is waiting at **`~/challenge.yaml`** — open it in the editor on
-the left, complete the TODO, then apply it:
-
-```
-kubectl apply -f ~/challenge.yaml
-```{{exec}}
-
-Check the injected field with a server-side dry-run (no Pod is created):
+Write and apply your policy, then check the injected field with a server-side
+dry-run (no Pod is created):
 
 ```
 kubectl run mp-check --image=nginx --dry-run=server -o jsonpath='{.spec.securityContext.runAsNonRoot}' ; echo
@@ -28,6 +22,8 @@ It must print `true`.
 - With `ApplyConfiguration` that is:
   `Object.spec{ securityContext: Object.spec.securityContext{ runAsNonRoot: true } }`.
 - `runAsNonRoot` is a **boolean**, so use `true`, not `"true"`.
+- Prefer a scaffold? A starter file is at `~/challenge.yaml` — edit it
+  (`vim ~/challenge.yaml`) and apply with `kubectl apply -f ~/challenge.yaml`.
 
 </details>
 
@@ -61,6 +57,10 @@ spec:
           }
 EOF
 ```{{exec}}
+
+<br>
+
+Reference: [Kyverno MutatingPolicy docs](https://kyverno.io/docs/policy-types/mutating-policy/).
 
 </details>
 

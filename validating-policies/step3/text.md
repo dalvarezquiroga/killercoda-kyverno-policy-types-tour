@@ -1,8 +1,8 @@
 # 3 · Dynamic messages & Warn
 
 `Warn` admits the resource but returns a warning to whoever created it — great
-for guiding users without blocking them. Combine it with `variables` and
-`messageExpression` to build a **dynamic** message.
+for guiding users without blocking them. Combine it with `messageExpression` to
+build a **dynamic** message.
 
 ```
 cat <<EOF | kubectl apply -f -
@@ -19,12 +19,9 @@ spec:
         apiVersions: ["v1"]
         operations: ["CREATE", "UPDATE"]
         resources: ["pods"]
-  variables:
-    - name: podName
-      expression: "object.metadata.name"
   validations:
     - expression: "'app.kubernetes.io/name' in object.metadata.?labels.orValue([])"
-      messageExpression: "'Pod ' + variables.podName + ' is missing the app.kubernetes.io/name label'"
+      messageExpression: "'Pod ' + object.metadata.name + ' is missing the app.kubernetes.io/name label'"
 EOF
 ```{{exec}}
 
@@ -34,15 +31,18 @@ Create a Pod without that label and watch the warning appear in the output:
 kubectl run nginx-warn --image=nginx --labels=team=platform
 ```{{exec}}
 
-<details><summary>Info: variables vs messageExpression</summary>
+<details><summary>Info: what is messageExpression?</summary>
 
 <br>
 
-`variables` are named CEL expressions evaluated once and reused as
-`variables.<name>` — handy to keep expressions readable. `messageExpression` is
-a CEL string returning the failure message, so it can include live data from the
-resource (here, the Pod name). Use `message` for a static string,
-`messageExpression` for a dynamic one.
+`message` is a **fixed** text. `messageExpression` builds the text with CEL, so
+it can include live data from the resource.
+
+Here, `object.metadata.name` is the name of the Pod being checked, so each
+warning names the exact Pod — for example *"Pod nginx-warn is missing ..."*.
+
+Use `message` for a fixed string, and `messageExpression` when you want details
+from the resource itself.
 
 </details>
 

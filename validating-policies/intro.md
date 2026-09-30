@@ -1,5 +1,7 @@
 <img src="./validating-policy.svg" alt="Kyverno ValidatingPolicy" width="100%">
 
+<br>
+
 # ValidatingPolicy — allow or block resources
 
 A **ValidatingPolicy** (API group `policies.kyverno.io/v1`) is the modern,
@@ -13,9 +15,9 @@ This is a hands-on deep dive, not a quick tour. You will:
 | Block vs report vs warn | `validationActions`: `Deny` / `Audit` / `Warn` |
 | What a policy matches | `matchConstraints.resourceRules` |
 | Writing safe CEL | optional accessors, list membership |
-| Dynamic feedback | `variables` + `messageExpression` |
+| Dynamic feedback | `messageExpression` |
 | Where violations show up | PolicyReports |
-| Do it yourself | a final **challenge** you solve in the IDE |
+| Do it yourself | a final **challenge** you solve in the terminal |
 
 ## Why CEL, not ClusterPolicy?
 
