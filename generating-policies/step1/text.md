@@ -39,6 +39,17 @@ spec:
 EOF
 ```{{exec}}
 
+List the policy you just created, and browse the whole family of CEL policy
+types (their names, API group and scope):
+
+```
+kubectl get generatingpolicy
+```{{exec}}
+
+```
+kubectl api-resources | grep policies.kyverno.io
+```{{exec}}
+
 Create a Namespace to trigger the policy:
 
 ```
