@@ -1,5 +1,7 @@
 <img src="./mutating-policy.svg" alt="Kyverno MutatingPolicy" width="100%">
 
+<br>
+
 # MutatingPolicy — change resources on the fly
 
 A **MutatingPolicy** (API group `policies.kyverno.io/v1`) patches resources as
@@ -15,7 +17,7 @@ In this hands-on deep dive you will:
 | Build partial objects | `Object{ ... }` in CEL |
 | Default only when missing | conditional CEL expressions |
 | Inject security defaults | `spec.securityContext` |
-| Do it yourself | a final **challenge** you solve in the IDE |
+| Do it yourself | a final **challenge** you solve in the terminal |
 
 ## Setup
 

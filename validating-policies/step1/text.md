@@ -36,14 +36,20 @@ spec:
 EOF
 ```{{exec}}
 
-<details><summary>Info: how the CEL expression works</summary>
+<details><summary>Info: reading a label safely</summary>
 
 <br>
 
-`object.metadata.?labels` is an **optional accessor**: it returns the labels map
-if present, or an *optional none* when the Pod has no labels. `.orValue([])`
-turns that into an empty list, so `'team' in ...` never errors — it simply
-returns `false`. This is the safe pattern for reading fields that may be missing.
+A Pod might have **no labels at all**. If you read them directly, the expression
+can error out.
+
+`object.metadata.?labels.orValue([])` avoids that:
+
+- `.?labels` reads the labels **only if they exist**.
+- `.orValue([])` means "if there are none, use an empty list instead".
+
+So `'team' in ...` simply returns `false` for a Pod with no labels, instead of
+failing. Use this pattern whenever a field might be missing.
 
 </details>
 

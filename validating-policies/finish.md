@@ -1,6 +1,6 @@
-# Nicely done!
+# Well done!
 
-You worked through the CEL-based **ValidatingPolicy**:
+Here's what you learned today — the CEL-based **ValidatingPolicy**:
 
 - **Deny** to block, **Audit** to report, **Warn** to nudge.
 - `matchConstraints.resourceRules` to scope what a policy sees.
@@ -25,5 +25,8 @@ You worked through the CEL-based **ValidatingPolicy**:
 - ValidatingPolicy: https://kyverno.io/docs/policy-types/validating-policy/
 - Policy types overview: https://kyverno.io/docs/policy-types/
 - Migration to CEL: https://kyverno.io/docs/guides/migration-to-cel/
+
+> These docs follow the current Kyverno release. This lab targets **v1.19** — if
+> you land on a newer version, use the **Select version** menu on kyverno.io.
 
 Next up: **MutatingPolicy** — change resources on the fly.
