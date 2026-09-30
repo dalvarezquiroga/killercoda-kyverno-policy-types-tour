@@ -1,5 +1,7 @@
 <img src="./generating-policy.svg" alt="Kyverno GeneratingPolicy" width="100%">
 
+<br>
+
 # GeneratingPolicy — create resources from a trigger
 
 A **GeneratingPolicy** (API group `policies.kyverno.io/v1`) creates or keeps
@@ -15,7 +17,7 @@ In this hands-on deep dive you will:
 | Keep resources in sync | `evaluation.synchronize.enabled` |
 | Template with live data | CEL `variables` + `(( ... ))` |
 | The #1 gotcha | RBAC for the background controller |
-| Do it yourself | a final **challenge** you solve in the IDE |
+| Do it yourself | a final **challenge** you solve in the terminal |
 
 ## Setup
 

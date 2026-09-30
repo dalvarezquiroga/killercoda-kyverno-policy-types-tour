@@ -1,27 +1,20 @@
 # 4 · Challenge — block the `:latest` tag
 
-Time to write a policy yourself. Using the image tag `:latest` is a classic
-anti-pattern: it makes deployments non-reproducible.
+Now write a policy yourself. The image tag `:latest` is a classic anti-pattern:
+it makes deployments non-reproducible.
 
 **Goal:** a `ValidatingPolicy` that **denies** any Pod whose container image ends
 in `:latest`, and **allows** pinned tags.
 
-A starter file is waiting for you at **`~/challenge.yaml`** — open it in the
-editor on the left, complete the TODOs, then apply it:
+Write and apply your policy, then test it with a server-side dry-run (this runs
+admission checks **without** creating the Pods):
 
 ```
-kubectl apply -f ~/challenge.yaml
-```{{exec}}
-
-Test your policy (a server-side dry-run triggers admission without creating
-Pods):
-
-```
-kubectl run t-latest --image=nginx:latest --labels=team=platform --dry-run=server
+kubectl run t-latest --image=nginx:latest --labels=team=platform,app.kubernetes.io/name=demo --dry-run=server
 ```{{exec}}
 
 ```
-kubectl run t-pinned --image=nginx:1.27 --labels=team=platform --dry-run=server
+kubectl run t-pinned --image=nginx:1.27 --labels=team=platform,app.kubernetes.io/name=demo --dry-run=server
 ```{{exec}}
 
 The first must be **blocked**, the second **allowed**.
@@ -36,6 +29,8 @@ The first must be **blocked**, the second **allowed**.
 - CEL strings support `endsWith`: `c.image.endsWith(':latest')`.
 - The expression must be **true when the Pod is OK**, so negate it:
   `!c.image.endsWith(':latest')`.
+- Prefer a scaffold? A starter file is at `~/challenge.yaml` — edit it
+  (`vim ~/challenge.yaml`) and apply with `kubectl apply -f ~/challenge.yaml`.
 
 </details>
 
@@ -63,6 +58,10 @@ spec:
       expression: "object.spec.containers.all(c, !c.image.endsWith(':latest'))"
 EOF
 ```{{exec}}
+
+<br>
+
+Reference: [Kyverno ValidatingPolicy docs](https://kyverno.io/docs/policy-types/validating-policy/).
 
 </details>
 

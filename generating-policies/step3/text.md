@@ -7,14 +7,7 @@ allow it.
 **Goal:** a `GeneratingPolicy` that creates a NetworkPolicy named `default-deny`
 in every new Namespace, selecting all Pods and denying both Ingress and Egress.
 
-A starter file is waiting at **`~/challenge.yaml`** — open it in the editor on
-the left, complete the TODO template, then apply it:
-
-```
-kubectl apply -f ~/challenge.yaml
-```{{exec}}
-
-Trigger it with a fresh Namespace:
+Write and apply your policy, then trigger it with a fresh Namespace:
 
 ```
 kubectl create namespace demo-netpol
@@ -39,6 +32,8 @@ kubectl get networkpolicy default-deny -n demo-netpol
   ```
 - Keep the `(( variables.nsName ))` placeholder for the target namespace.
 - Generation is asynchronous — give it a few seconds.
+- Prefer a scaffold? A starter file is at `~/challenge.yaml` — edit it
+  (`vim ~/challenge.yaml`) and apply with `kubectl apply -f ~/challenge.yaml`.
 
 </details>
 
@@ -83,6 +78,10 @@ EOF
 ```{{exec}}
 
 Then trigger it: `kubectl create namespace demo-netpol`
+
+<br>
+
+Reference: [Kyverno GeneratingPolicy docs](https://kyverno.io/docs/policy-types/generating-policy/).
 
 </details>
 
