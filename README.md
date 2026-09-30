@@ -6,8 +6,9 @@ Interactive [Killercoda](https://killercoda.com/) scenarios that teach the moder
 
 ## Scenarios
 
-A three-part course, one scenario per CEL policy type. Each one is a hands-on
-deep dive that ends with a **challenge** you solve yourself in the built-in IDE.
+A three-part course, one scenario per CEL policy type. Each one is a
+terminal-based, hands-on deep dive with guided, verified steps that ends with a
+**challenge** you solve yourself (with Tip and Solution hints if you get stuck).
 
 | Scenario | What you learn |
 |----------|----------------|
@@ -15,8 +16,9 @@ deep dive that ends with a **challenge** you solve yourself in the built-in IDE.
 | [`mutating-policies`](./mutating-policies) | Change resources on the fly with `MutatingPolicy`: `ApplyConfiguration` patches and conditional defaults. Challenge: inject `runAsNonRoot`. |
 | [`generating-policies`](./generating-policies) | Create resources from a trigger with `GeneratingPolicy`: synchronize, CEL templates, and the background-controller RBAC gotcha. Challenge: a default-deny NetworkPolicy. |
 
-Each scenario installs a pinned Kyverno (v1.19) on a single-node Kubernetes
-cluster and walks you through hands-on, verified steps.
+Each scenario installs a pinned Kyverno (**v1.19**) on a single-node Kubernetes
+cluster. Docs links follow the current Kyverno release — use the *Select version*
+menu on kyverno.io if you're on a newer one.
 
 ## Run on Killercoda
 

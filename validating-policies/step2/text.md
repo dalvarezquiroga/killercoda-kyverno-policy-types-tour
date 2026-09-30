@@ -22,6 +22,14 @@ report right there:
 kubectl get policyreport -n default
 ```{{exec}}
 
+You'll get one row per Pod, for example:
+
+- **nginx-team** (from Step 1, has the label) → `PASS 1`
+- **nginx-audit** (no label) → `FAIL 1`
+
+Audit never blocks, but it clearly records who complies and who doesn't — handy
+for measuring impact before you switch a policy to `Deny`.
+
 Look at the failing entry in detail:
 
 ```

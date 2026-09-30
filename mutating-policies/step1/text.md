@@ -47,6 +47,19 @@ and `Object.metadata.labels{...}` mirror the shape of the resource.
 
 <br>
 
+List the policy you just created, and browse the whole family of CEL policy
+types (their names, API group and scope):
+
+```
+kubectl get mutatingpolicy
+```{{exec}}
+
+```
+kubectl api-resources | grep policies.kyverno.io
+```{{exec}}
+
+<br>
+
 Create a Pod and check the label that Kyverno injected:
 
 ```

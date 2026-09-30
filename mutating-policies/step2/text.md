@@ -61,10 +61,13 @@ kubectl get pod nginx-frontend -o jsonpath='{.metadata.labels.tier}' ; echo
 
 <br>
 
-`has(object.metadata.labels)` guards against a `null` labels map. The ternary
-`cond ? a : b` returns the existing `tier` when present, otherwise the literal
-`"backend"`. Because `ApplyConfiguration` merges, writing the current value back
-is a harmless no-op — so nothing changes for Pods that already set `tier`.
+`has(object.metadata.labels)` first checks the Pod actually has labels, so the
+expression stays safe when there are none.
+
+The `cond ? a : b` part reads as: "if the Pod already has a **tier**, keep it;
+otherwise use **backend**". Since `ApplyConfiguration` merges, writing the same
+value back changes nothing — so Pods that already set a **tier** are left
+untouched.
 
 </details>
 

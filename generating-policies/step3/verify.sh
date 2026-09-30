@@ -1,9 +1,12 @@
 #!/bin/bash
-# The GeneratingPolicy must create a default-deny NetworkPolicy in a new NS.
-# Create the trigger namespace if the user has not yet, then retry (async).
-kubectl get ns demo-netpol >/dev/null 2>&1 || kubectl create namespace demo-netpol >/dev/null 2>&1
-for i in $(seq 1 15); do
-  kubectl get networkpolicy default-deny -n demo-netpol >/dev/null 2>&1 && exit 0
+# Create a brand-new namespace so the trigger always fires AFTER the policy,
+# then wait for the generated default-deny NetworkPolicy (generation is async).
+ns="gpol-verify-$$"
+kubectl create namespace "$ns" >/dev/null 2>&1
+rc=1
+for i in $(seq 1 20); do
+  if kubectl get networkpolicy default-deny -n "$ns" >/dev/null 2>&1; then rc=0; break; fi
   sleep 2
 done
-exit 1
+kubectl delete namespace "$ns" --wait=false >/dev/null 2>&1
+exit $rc

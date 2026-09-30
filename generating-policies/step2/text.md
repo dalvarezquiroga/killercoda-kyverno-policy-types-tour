@@ -84,4 +84,17 @@ kind.
 
 </details>
 
+<details><summary>Tip: don't reinvent the wheel — Kyverno sample policies</summary>
+
+<br>
+
+Kyverno publishes a **catalog of ready-made, community-maintained policies** you
+can copy and adapt. This exact "quota per namespace" idea is there:
+[Add Quota](https://kyverno.io/policies/best-practices-gpol/add-ns-quota/add-ns-quota/)
+(it also adds a `LimitRange`).
+
+Browse the whole library at [kyverno.io/policies](https://kyverno.io/policies/).
+
+</details>
+
 Click **CHECK** once the ResourceQuota exists in `demo-quota`.

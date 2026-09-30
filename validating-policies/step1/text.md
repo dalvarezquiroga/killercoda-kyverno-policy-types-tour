@@ -55,6 +55,19 @@ failing. Use this pattern whenever a field might be missing.
 
 <br>
 
+List the policy you just created, and browse the whole family of CEL policy
+types (their names, API group and scope):
+
+```
+kubectl get validatingpolicy
+```{{exec}}
+
+```
+kubectl api-resources | grep policies.kyverno.io
+```{{exec}}
+
+<br>
+
 Try to create a Pod **without** the label — it is blocked:
 
 ```
