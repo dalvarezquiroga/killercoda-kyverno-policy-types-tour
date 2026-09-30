@@ -1,7 +1,7 @@
 #!/bin/bash
 # Real scenario setup. Uploaded to /ks and run hidden by init/background.sh.
 # Installs a pinned Kyverno (chart 3.9.1 = v1.19.1) for the stable CEL policy
-# CRDs (policies.kyverno.io/v1) and grants the RBAC that Step 3 needs.
+# CRDs (policies.kyverno.io/v1).
 
 helm repo add kyverno https://kyverno.github.io/kyverno/ || true
 helm repo update
@@ -17,26 +17,9 @@ helm install kyverno kyverno/kyverno \
   --set cleanupController.replicas=1 \
   --set reportsController.replicas=1
 
-# Step 3 generates a ConfigMap. The background controller only has read access
-# (built-in view role) by default, so aggregate write access onto its ClusterRole.
-kubectl apply -f - <<'EOF'
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: kyverno:generate-configmaps
-  labels:
-    rbac.kyverno.io/aggregate-to-background-controller: "true"
-rules:
-  - apiGroups: [""]
-    resources: ["configmaps"]
-    verbs: ["create", "update", "delete", "get", "list", "watch"]
-EOF
-
-# Make sure the CEL policy CRDs are established before the user reaches Step 1.
+# Make sure the ValidatingPolicy CRD is established before Step 1.
 kubectl wait --for=condition=established --timeout=2m \
-  crd/validatingpolicies.policies.kyverno.io \
-  crd/mutatingpolicies.policies.kyverno.io \
-  crd/generatingpolicies.policies.kyverno.io
+  crd/validatingpolicies.policies.kyverno.io
 
 # Record the installed Kyverno version for the welcome message.
 kubectl -n kyverno get deploy kyverno-admission-controller \
