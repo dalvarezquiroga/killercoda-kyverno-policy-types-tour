@@ -1,4 +1,4 @@
-# Mutate resources
+# 1 · Add a label with ApplyConfiguration
 
 > **Docs:** [MutatingPolicy](https://kyverno.io/docs/policy-types/mutating-policy/)
 
@@ -38,9 +38,10 @@ EOF
 
 <br>
 
-`ApplyConfiguration` builds a partial `Object` that is merged into the resource.
-It is more readable and less error-prone than raw JSON patches — you only
-describe the fields you want to add or change.
+`ApplyConfiguration` builds a partial `Object` that is **merged** into the
+resource. You only describe the fields you want to add or change — more readable
+and less error-prone than raw JSON patches. The nested `Object.metadata{...}`
+and `Object.metadata.labels{...}` mirror the shape of the resource.
 
 </details>
 
@@ -56,4 +57,4 @@ kubectl run nginx-mutated --image=nginx --labels=team=platform
 kubectl get pod nginx-mutated -o jsonpath='{.metadata.labels}' ; echo
 ```{{exec}}
 
-You should see `hello: world` even though you never set it.
+You should see `hello: world` even though you never set it. Click **CHECK**.
