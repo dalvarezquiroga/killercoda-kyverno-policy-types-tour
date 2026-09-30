@@ -32,3 +32,6 @@ Here's what you learned today — the CEL-based **GeneratingPolicy**:
 
 That's the trio — **Validate**, **Mutate**, **Generate**. You're ready to write
 CEL-based Kyverno policies!
+
+Want to keep learning? Follow the [Kyverno blog](https://kyverno.io/blog/) for
+new features, patterns and real-world use cases.
