@@ -7,12 +7,11 @@ allow it.
 **Goal:** a `GeneratingPolicy` that creates a NetworkPolicy named `default-deny`
 in every new Namespace, selecting all Pods and denying both Ingress and Egress.
 
-> **Order matters:** generation is **not** retroactive — it only fires for
-> Namespaces created **after** the policy exists. So apply your policy first,
-> then create a **new** Namespace to trigger it.
+> **Order matters:** generation is **not** retroactive. Because the policy
+> matches `CREATE` **and** `UPDATE` on Namespaces, it fires when a Namespace is
+> created *or* updated after the policy exists.
 
-Once your policy is applied, create a fresh Namespace and check the result
-(generation is asynchronous, so give it a few seconds):
+Apply your policy first. Then create a Namespace to trigger it:
 
 ```
 kubectl create namespace demo-netpol
@@ -22,8 +21,18 @@ kubectl create namespace demo-netpol
 kubectl get networkpolicy default-deny -n demo-netpol
 ```{{exec}}
 
-If nothing shows up, you most likely created the Namespace **before** applying
-the policy — create another one with a new name and check again.
+Already created `demo-netpol` **before** applying the policy? Don't recreate it
+— just touch it with a label to trigger generation now:
+
+```
+kubectl label namespace demo-netpol kyverno-trigger=1 --overwrite
+```{{exec}}
+
+Give it a few seconds (generation is asynchronous), then check again:
+
+```
+kubectl get networkpolicy default-deny -n demo-netpol
+```{{exec}}
 
 <details><summary>Tip</summary>
 
@@ -39,6 +48,8 @@ the policy — create another one with a new name and check again.
       - Egress
   ```
 - Keep the `(( variables.nsName ))` placeholder for the target namespace.
+- Matching `CREATE` **and** `UPDATE` lets you re-trigger an existing Namespace
+  with a label (`kubectl label ns <name> foo=bar --overwrite`).
 - Generation is asynchronous — give it a few seconds.
 - Prefer a scaffold? A starter file is at `~/challenge.yaml` — edit it
   (`vim ~/challenge.yaml`) and apply with `kubectl apply -f ~/challenge.yaml`.
@@ -66,7 +77,7 @@ spec:
     resourceRules:
       - apiGroups: [""]
         apiVersions: ["v1"]
-        operations: ["CREATE"]
+        operations: ["CREATE", "UPDATE"]
         resources: ["namespaces"]
   variables:
     - name: nsName
