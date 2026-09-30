@@ -14,4 +14,4 @@ version=$(cat /ks/kyverno-version 2>/dev/null)
 echo " ready!"
 echo
 echo "Kyverno ${version:-v1.19} is installed and ready — CEL policy CRDs registered."
-echo "Click the START button to begin the tour."
+echo "Click the START button to begin."

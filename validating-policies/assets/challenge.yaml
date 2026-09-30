@@ -1,0 +1,25 @@
+# CHALLENGE: complete this ValidatingPolicy so it BLOCKS any Pod whose
+# container image uses the ':latest' tag, and ALLOWS pinned tags.
+#
+# Fill in the TODOs, then apply it:
+#   kubectl apply -f ~/challenge.yaml
+#
+apiVersion: policies.kyverno.io/v1
+kind: ValidatingPolicy
+metadata:
+  name: block-latest-tag
+spec:
+  validationActions:
+    - Deny
+  matchConstraints:
+    resourceRules:
+      - apiGroups: [""]
+        apiVersions: ["v1"]
+        operations: ["CREATE", "UPDATE"]
+        resources: ["pods"]
+  validations:
+    - message: "TODO: explain why ':latest' is not allowed"
+      # TODO: write a CEL expression that is TRUE only when NO container
+      #       uses an image ending in ':latest'.
+      # Hint: object.spec.containers.all(c, ...) and c.image.endsWith(':latest')
+      expression: "true"

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 200" role="img" aria-label="Kyverno MutatingPolicy">
+  <rect width="720" height="200" rx="14" fill="#0b1324"/>
+  <text x="360" y="42" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff">Kyverno · MutatingPolicy</text>
+
+  <rect x="30" y="72" width="200" height="98" rx="10" fill="#1f2a44"/>
+  <text x="130" y="112" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700" fill="#64748b">Validate</text>
+  <text x="130" y="140" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#475569">Allow or block</text>
+
+  <rect x="260" y="72" width="200" height="98" rx="10" fill="#2563eb"/>
+  <text x="360" y="112" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700" fill="#ffffff">Mutate</text>
+  <text x="360" y="140" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#e7edff">Change on the fly</text>
+
+  <rect x="490" y="72" width="200" height="98" rx="10" fill="#1f2a44"/>
+  <text x="590" y="112" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700" fill="#64748b">Generate</text>
+  <text x="590" y="140" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#475569">Create from a trigger</text>
+</svg>

@@ -1,5 +1,7 @@
 {
   "items": [
-    { "path": "policy-types-tour" }
+    { "path": "validating-policies" },
+    { "path": "mutating-policies" },
+    { "path": "generating-policies" }
   ]
 }
