@@ -1,5 +1,6 @@
 # CHALLENGE: complete this ValidatingPolicy so it BLOCKS any Pod whose
-# container image uses the ':latest' tag, and ALLOWS pinned tags.
+# container image uses the ':latest' tag, and ALLOWS fixed version tags
+# (like nginx:1.27).
 #
 # Fill in the TODOs, then apply it:
 #   kubectl apply -f ~/challenge.yaml

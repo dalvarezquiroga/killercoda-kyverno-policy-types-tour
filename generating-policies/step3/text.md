@@ -1,15 +1,16 @@
 # 3 · Challenge — default-deny NetworkPolicy
 
-A great real-world use of GeneratingPolicy: give every new Namespace a
-**default-deny** NetworkPolicy so nothing talks to anything until you explicitly
-allow it.
+A very useful, real use of GeneratingPolicy: give every new Namespace a
+**default-deny** NetworkPolicy. Then no traffic is allowed until you allow it
+yourself.
 
-**Goal:** a `GeneratingPolicy` that creates a NetworkPolicy named `default-deny`
-in every new Namespace, selecting all Pods and denying both Ingress and Egress.
+**Goal:** a `GeneratingPolicy` that creates a NetworkPolicy named
+`default-deny` in every new Namespace. It must select all Pods and deny both
+Ingress and Egress.
 
-> **Order matters:** generation is **not** retroactive. Because the policy
-> matches `CREATE` **and** `UPDATE` on Namespaces, it fires when a Namespace is
-> created *or* updated after the policy exists.
+> **Order matters:** generation does **not** apply to Namespaces that already
+> exist. The policy matches `CREATE` **and** `UPDATE` on Namespaces, so it runs
+> when a Namespace is created *or* updated after the policy exists.
 
 Apply your policy first. Then create a Namespace to trigger it:
 
@@ -21,14 +22,14 @@ kubectl create namespace demo-netpol
 kubectl get networkpolicy default-deny -n demo-netpol
 ```{{exec}}
 
-Already created `demo-netpol` **before** applying the policy? Don't recreate it
-— just touch it with a label to trigger generation now:
+Did you create `demo-netpol` **before** you applied the policy? Don't create it
+again — just add a label to it, so generation runs now:
 
 ```
 kubectl label namespace demo-netpol kyverno-trigger=1 --overwrite
 ```{{exec}}
 
-Give it a few seconds (generation is asynchronous), then check again:
+Wait a few seconds (generation is asynchronous), then check again:
 
 ```
 kubectl get networkpolicy default-deny -n demo-netpol
@@ -38,8 +39,9 @@ kubectl get networkpolicy default-deny -n demo-netpol
 
 <br>
 
-- The RBAC for `networkpolicies` was already granted during setup.
-- A default-deny NetworkPolicy selects everything and lists both policy types:
+- The setup already gave the background controller RBAC for
+  `networkpolicies`.
+- A default-deny NetworkPolicy selects all Pods and lists both policy types:
   ```
   spec:
     podSelector: {}
@@ -48,14 +50,15 @@ kubectl get networkpolicy default-deny -n demo-netpol
       - Egress
   ```
 - Keep the `(( variables.nsName ))` placeholder for the target namespace.
-- Matching `CREATE` **and** `UPDATE` lets you re-trigger an existing Namespace
-  with a label (`kubectl label ns <name> foo=bar --overwrite`).
-- Generation is asynchronous — give it a few seconds.
-- Prefer a scaffold? A starter file is at `~/challenge.yaml` — edit it
-  (`vim ~/challenge.yaml`) and apply with `kubectl apply -f ~/challenge.yaml`.
-- Kyverno ships a ready-made version of this exact policy —
+- Matching `CREATE` **and** `UPDATE` lets you trigger an existing Namespace
+  again by adding a label (`kubectl label ns <name> foo=bar --overwrite`).
+- Generation is asynchronous — wait a few seconds.
+- Want a starting point? There is a starter file at `~/challenge.yaml`. Edit it
+  (`vim ~/challenge.yaml`) and apply it with `kubectl apply -f ~/challenge.yaml`.
+- Kyverno has a ready-made version of this policy —
   [Add Network Policy](https://kyverno.io/policies/best-practices-gpol/add-network-policy/add-network-policy/)
-  from the [policy catalog](https://kyverno.io/policies/). Try it yourself first!
+  in the [policy catalog](https://kyverno.io/policies/). But try it yourself
+  first!
 
 </details>
 
@@ -107,4 +110,4 @@ Reference: [Kyverno GeneratingPolicy docs](https://kyverno.io/docs/policy-types/
 
 </details>
 
-Click **CHECK** once the NetworkPolicy exists in `demo-netpol`.
+Click **CHECK** when the NetworkPolicy exists in `demo-netpol`.

@@ -1,6 +1,6 @@
 {
   "title": "Kyverno PolicyException (CEL)",
-  "description": "Exempt specific resources from CEL-based Kyverno policies with PolicyException — safely, narrowly and with governance.",
+  "description": "Let specific resources skip CEL-based Kyverno policies with PolicyException — safely, and only where you need it.",
   "details": {
     "assets": {
       "host01": [
@@ -18,8 +18,8 @@
     "steps": [
       {"title": "A policy that blocks", "text": "step1/text.md", "verify": "step1/verify.sh"},
       {"title": "Your first PolicyException", "text": "step2/text.md", "verify": "step2/verify.sh"},
-      {"title": "Governance: namespace & expiry", "text": "step3/text.md", "verify": "step3/verify.sh"},
-      {"title": "Challenge: exempt a namespace", "text": "step4/text.md", "verify": "step4/verify.sh"}
+      {"title": "Who and until when: namespace & end date", "text": "step3/text.md", "verify": "step3/verify.sh"},
+      {"title": "Challenge: skip a whole namespace", "text": "step4/text.md", "verify": "step4/verify.sh"}
     ],
     "finish": {"text": "finish.md"}
   },

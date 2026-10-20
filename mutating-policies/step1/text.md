@@ -2,10 +2,11 @@
 
 > **Docs:** [MutatingPolicy](https://kyverno.io/docs/policy-types/mutating-policy/)
 
-A **MutatingPolicy** changes resources as they are created. Patches are written
-as CEL using `patchType: ApplyConfiguration`, a merge-style `Object`.
+A **MutatingPolicy** changes resources when they are created. You write the
+patches in CEL with `patchType: ApplyConfiguration`, an `Object` that is
+merged into the resource.
 
-Create a policy that adds a friendly `hello: world` label to every Pod:
+Create a policy that adds a simple `hello: world` label to every Pod:
 
 ```
 cat <<EOF | kubectl apply -f -
@@ -39,16 +40,17 @@ EOF
 <br>
 
 `ApplyConfiguration` builds a partial `Object` that is **merged** into the
-resource. You only describe the fields you want to add or change — more readable
-and less error-prone than raw JSON patches. The nested `Object.metadata{...}`
-and `Object.metadata.labels{...}` mirror the shape of the resource.
+resource. You only write the fields you want to add or change. This is easier
+to read, and harder to get wrong, than raw JSON patches. The nested
+`Object.metadata{...}` and `Object.metadata.labels{...}` follow the same
+structure as the resource.
 
 </details>
 
 <br>
 
-List the policy you just created, and browse the whole family of CEL policy
-types (their names, API group and scope):
+List the policy you just created, and see all the CEL policy types (their
+names, API group and scope):
 
 ```
 kubectl get mutatingpolicy
@@ -60,7 +62,7 @@ kubectl api-resources | grep policies.kyverno.io
 
 <br>
 
-Create a Pod and check the label that Kyverno injected:
+Create a Pod and check the label that Kyverno added:
 
 ```
 kubectl run nginx-mutated --image=nginx --labels=team=platform
@@ -70,4 +72,4 @@ kubectl run nginx-mutated --image=nginx --labels=team=platform
 kubectl get pod nginx-mutated -o jsonpath='{.metadata.labels}' ; echo
 ```{{exec}}
 
-You should see `hello: world` even though you never set it. Click **CHECK**.
+You should see `hello: world`, even though you never set it. Click **CHECK**.

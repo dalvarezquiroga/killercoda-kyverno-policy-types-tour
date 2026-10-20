@@ -1,6 +1,6 @@
 # CHALLENGE: complete this PolicyException so that EVERY Pod in the "sandbox"
-# namespace skips the require-team-label policy, and Pods anywhere else are
-# still checked.
+# namespace skips the require-team-label policy. Pods in other namespaces must
+# still be checked.
 #
 # Fill in the TODOs, then apply it:
 #   kubectl apply -f ~/challenge.yaml

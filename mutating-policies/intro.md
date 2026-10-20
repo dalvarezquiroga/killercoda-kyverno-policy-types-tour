@@ -2,25 +2,26 @@
 
 <br>
 
-# MutatingPolicy — change resources on the fly
+# MutatingPolicy — change resources as they are created
 
-A **MutatingPolicy** (API group `policies.kyverno.io/v1`) patches resources as
-they are admitted: inject labels, sensible defaults, security settings, and
-more. Patches are written in CEL, most often with `patchType: ApplyConfiguration`
-— a readable, merge-style `Object`.
+A **MutatingPolicy** (API group `policies.kyverno.io/v1`) changes (patches)
+resources when Kubernetes receives them: it can add labels, default values,
+security settings, and more. You write the patches in CEL, usually with
+`patchType: ApplyConfiguration` — an `Object` that is easy to read and is
+merged into the resource.
 
-In this hands-on deep dive you will:
+In this hands-on lab you will learn:
 
 | You'll learn | Concept |
 |--------------|---------|
-| Merge-style patches | `patchType: ApplyConfiguration` |
+| Patches that merge | `patchType: ApplyConfiguration` |
 | Build partial objects | `Object{ ... }` in CEL |
-| Default only when missing | conditional CEL expressions |
-| Inject security defaults | `spec.securityContext` |
+| Set a default only when it's missing | conditional CEL expressions |
+| Add security defaults | `spec.securityContext` |
 | Do it yourself | a final **challenge** you solve in the terminal |
 
 ## Setup
 
-Kyverno **v1.19** is being installed in the background so the stable
+Kyverno **v1.19** is being installed in the background, so the stable
 `policies.kyverno.io/v1` CRDs are ready. Wait for the short progress indicator
 in the terminal to finish, then click **START**.

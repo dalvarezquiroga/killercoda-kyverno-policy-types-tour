@@ -1,13 +1,13 @@
 # 4 · Challenge — block the `:latest` tag
 
-Now write a policy yourself. The image tag `:latest` is a classic anti-pattern:
-it makes deployments non-reproducible.
+Now write a policy yourself. Using the image tag `:latest` is a bad practice:
+the image can change at any time, so you can't tell which version is running.
 
-**Goal:** a `ValidatingPolicy` that **denies** any Pod whose container image ends
-in `:latest`, and **allows** pinned tags.
+**Goal:** a `ValidatingPolicy` that **blocks** any Pod with a container image
+that ends in `:latest`, and **allows** fixed version tags (like `nginx:1.27`).
 
-Write and apply your policy, then test it with a server-side dry-run (this runs
-admission checks **without** creating the Pods):
+Write and apply your policy. Then test it with a server-side dry-run (Kyverno
+checks the request, but the Pods are **not** created):
 
 ```
 kubectl run t-latest --image=nginx:latest --labels=team=platform,app.kubernetes.io/name=demo --dry-run=server
@@ -17,20 +17,20 @@ kubectl run t-latest --image=nginx:latest --labels=team=platform,app.kubernetes.
 kubectl run t-pinned --image=nginx:1.27 --labels=team=platform,app.kubernetes.io/name=demo --dry-run=server
 ```{{exec}}
 
-The first must be **blocked**, the second **allowed**.
+The first must be **blocked**, and the second **allowed**.
 
 <details><summary>Tip</summary>
 
 <br>
 
-- Match `pods` in `matchConstraints.resourceRules`, as in the previous steps.
-- A Pod can have several containers — check them **all**:
+- Match `pods` in `matchConstraints.resourceRules`, like in the previous steps.
+- A Pod can have several containers — check **all** of them:
   `object.spec.containers.all(c, ...)`.
-- CEL strings support `endsWith`: `c.image.endsWith(':latest')`.
-- The expression must be **true when the Pod is OK**, so negate it:
+- CEL strings have `endsWith`: `c.image.endsWith(':latest')`.
+- The expression must be **true when the Pod is OK**, so negate it with `!`:
   `!c.image.endsWith(':latest')`.
-- Prefer a scaffold? A starter file is at `~/challenge.yaml` — edit it
-  (`vim ~/challenge.yaml`) and apply with `kubectl apply -f ~/challenge.yaml`.
+- Want a starting point? There is a starter file at `~/challenge.yaml`. Edit it
+  (`vim ~/challenge.yaml`) and apply it with `kubectl apply -f ~/challenge.yaml`.
 
 </details>
 
@@ -65,4 +65,4 @@ Reference: [Kyverno ValidatingPolicy docs](https://kyverno.io/docs/policy-types/
 
 </details>
 
-Click **CHECK** when `:latest` is blocked and pinned tags are allowed.
+Click **CHECK** when `:latest` is blocked and fixed version tags are allowed.

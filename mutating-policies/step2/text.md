@@ -1,8 +1,8 @@
 # 2 · Conditional defaults with CEL
 
-Overwriting a value the user already set is rarely what you want. A common
-pattern is **default only when missing**. CEL lets you compute the value
-conditionally: keep the existing one if present, otherwise fall back to a
+You usually don't want to replace a value that the user already set. A common
+pattern is to **set a default only when the value is missing**. With CEL you
+can decide the value: keep the current one if it exists, otherwise use a
 default.
 
 This policy sets a `tier` label to `backend`, but only if the Pod does not
@@ -47,7 +47,7 @@ kubectl run nginx-default-tier --image=nginx --labels=team=platform
 kubectl get pod nginx-default-tier -o jsonpath='{.metadata.labels.tier}' ; echo
 ```{{exec}}
 
-Now create a Pod that **already** sets `tier` — its value is preserved:
+Now create a Pod that **already** has `tier` — its value does not change:
 
 ```
 kubectl run nginx-frontend --image=nginx --labels=team=platform,tier=frontend
@@ -61,13 +61,12 @@ kubectl get pod nginx-frontend -o jsonpath='{.metadata.labels.tier}' ; echo
 
 <br>
 
-`has(object.metadata.labels)` first checks the Pod actually has labels, so the
-expression stays safe when there are none.
+`has(object.metadata.labels)` first checks that the Pod has labels, so the
+expression does not fail when there are none.
 
-The `cond ? a : b` part reads as: "if the Pod already has a **tier**, keep it;
-otherwise use **backend**". Since `ApplyConfiguration` merges, writing the same
-value back changes nothing — so Pods that already set a **tier** are left
-untouched.
+The `cond ? a : b` part means: "if the Pod already has a **tier**, keep it;
+otherwise use **backend**". `ApplyConfiguration` merges, so writing the same
+value back changes nothing. Pods that already have a **tier** stay the same.
 
 </details>
 

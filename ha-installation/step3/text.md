@@ -1,35 +1,36 @@
-# 3 · PDBs & a failure drill
+# 3 · PDBs & a failure test
 
 ## PodDisruptionBudgets
 
-Replicas protect you from crashes. **PodDisruptionBudgets** (PDBs) protect you
-from *voluntary* disruptions — a `kubectl drain`, a node upgrade, the cluster
-autoscaler — by never evicting below a minimum. The chart creates one
-automatically for every controller with more than one replica:
+Replicas protect you when a Pod crashes. **PodDisruptionBudgets** (PDBs)
+protect you during *planned* maintenance — a `kubectl drain`, a node upgrade,
+the cluster autoscaler. A PDB never lets the number of running replicas go
+below a minimum. The chart creates one for every controller with more than one
+replica:
 
 ```
 kubectl get pdb -n kyverno
 ```{{exec}}
 
-Each one says `MIN AVAILABLE 1`: a drain may evict replicas, but always leaves
-at least one running.
+Each one shows `MIN AVAILABLE 1`: a drain can stop replicas, but it always
+leaves at least one running.
 
 <details><summary>Info: PDBs don't stop kubectl delete</summary>
 
 <br>
 
-A PDB only guards the **eviction** API (what `kubectl drain` and autoscalers
-use). Deleting a Pod directly — like you are about to do — bypasses it. That's
-exactly why you need **replicas** too: PDBs cover planned maintenance, replicas
-cover failures.
+A PDB only protects against **eviction**: the API that `kubectl drain` and
+autoscalers use to move Pods away. If you delete a Pod directly — like you
+will do now — the PDB does not apply. That's why you need **replicas** too:
+PDBs cover planned maintenance, and replicas cover failures.
 
 </details>
 
 <br>
 
-## Something to enforce
+## A policy to test with
 
-Create a policy so you can prove Kyverno keeps working during the drill:
+Create a policy, so you can check that Kyverno keeps working during the test:
 
 ```
 cat <<EOF | kubectl apply -f -
@@ -52,7 +53,8 @@ spec:
 EOF
 ```{{exec}}
 
-A server-side dry-run (admission runs, nothing is created) is **blocked**:
+A server-side dry-run (Kyverno checks the request, but nothing is created) is
+**blocked**:
 
 ```
 kubectl run ha-test --image=nginx --dry-run=server
@@ -60,9 +62,10 @@ kubectl run ha-test --image=nginx --dry-run=server
 
 <br>
 
-## Drill 1 · Kill the admission leader
+## Test 1 · Delete the admission leader
 
-Delete the Pod that holds the `kyverno` Lease, and immediately test the policy:
+Delete the Pod that holds the `kyverno` Lease, and test the policy right
+away:
 
 ```
 LEADER=$(kubectl get lease kyverno -n kyverno -o jsonpath='{.spec.holderIdentity}')
@@ -71,21 +74,21 @@ kubectl delete pod "$LEADER" -n kyverno --wait=false
 kubectl run ha-test --image=nginx --dry-run=server
 ```{{exec}}
 
-Still **blocked** — the other replicas kept answering webhooks. Give the Lease
-a few seconds to expire, then check who leads now:
+Still **blocked** — the other replicas kept answering the webhooks. Wait a few
+seconds for the Lease to expire, then check who the leader is now:
 
 ```
 sleep 20; kubectl get leases -n kyverno
 ```{{exec}}
 
-A **different** Pod holds the `kyverno` Lease: a standby took over certificate
-and webhook management.
+A **different** Pod holds the `kyverno` Lease: a backup replica took over the
+certificates and the webhook configurations.
 
 <br>
 
-## Drill 2 · Lose two of three replicas
+## Test 2 · Lose two of three replicas
 
-Now delete **two** admission replicas at once:
+Now delete **two** admission replicas at the same time:
 
 ```
 kubectl get pods -n kyverno -l app.kubernetes.io/component=admission-controller -o name \
@@ -93,14 +96,14 @@ kubectl get pods -n kyverno -l app.kubernetes.io/component=admission-controller 
 kubectl run ha-test --image=nginx --dry-run=server
 ```{{exec}}
 
-Still **blocked** — one replica is enough to keep enforcing. And compliant
-requests still go through:
+Still **blocked** — one replica is enough to keep the policy working. And
+valid requests still work:
 
 ```
 kubectl run ha-ok --image=nginx --labels=team=platform --dry-run=server
 ```{{exec}}
 
-Watch the Deployment heal itself back to three replicas:
+Watch the Deployment recover back to three replicas:
 
 ```
 kubectl rollout status deploy/kyverno-admission-controller -n kyverno --timeout=5m
@@ -110,17 +113,18 @@ kubectl rollout status deploy/kyverno-admission-controller -n kyverno --timeout=
 
 <br>
 
-Kyverno's webhooks fail **closed** by default: with no replica left, the API
-server rejects every request those webhooks match. That's the safe choice for
-security, and the reason HA matters.
+By default Kyverno's webhooks **fail closed**: with no replica left, the API
+server rejects every request that those webhooks check. This is the safe
+choice for security, and it is the reason why HA is important.
 
-- The `kyverno` and `kube-system` namespaces are excluded from the webhooks, so
+- The webhooks don't check the `kyverno` and `kube-system` namespaces, so
   Kyverno itself can always restart.
-- In an emergency you can delete Kyverno's webhook configurations; Kyverno
-  recreates them when it comes back.
-- `features.forceFailurePolicyIgnore.enabled=true` makes webhooks fail **open**
-  instead — more available, less secure. Choose deliberately.
+- In an emergency you can delete Kyverno's webhook configurations. Kyverno
+  creates them again when it starts.
+- `features.forceFailurePolicyIgnore.enabled=true` makes the webhooks **fail
+  open** instead: if Kyverno is down, requests are allowed without checks. More
+  available, less secure — only use it on purpose.
 
 </details>
 
-Click **CHECK** once every Kyverno Deployment is fully ready again.
+Click **CHECK** when every Kyverno Deployment is fully ready again.

@@ -2,8 +2,9 @@
 
 > **Docs:** [ValidatingPolicy](https://kyverno.io/docs/policy-types/validating-policy/)
 
-To make an exception, you first need a rule. Create a **ValidatingPolicy** that
-requires every Pod to carry a `team` label, and **denies** the ones that don't:
+Before you make an exception, you need a rule. Create a **ValidatingPolicy**
+that requires every Pod to have a `team` label, and **blocks** the Pods that
+don't:
 
 ```
 cat <<EOF | kubectl apply -f -
@@ -32,28 +33,29 @@ kubectl get validatingpolicy
 
 <br>
 
-Now meet `legacy-app` — an old workload nobody has relabeled yet. Try to run it:
+Now meet `legacy-app` — an old app that nobody has given the label yet. Try
+to run it:
 
 ```
 kubectl run legacy-app --image=nginx
 ```{{exec}}
 
-It is **blocked** with `label 'team' is required`. A compliant Pod is still
-fine:
+It is **blocked** with `label 'team' is required`. A Pod with the label still
+works:
 
 ```
 kubectl run web --image=nginx --labels=team=platform
 ```{{exec}}
 
-<details><summary>Info: why not just weaken the policy?</summary>
+<details><summary>Info: why not just change the policy?</summary>
 
 <br>
 
-You could add `legacy-app` to the policy itself, but then the policy keeps
-growing with special cases and nobody can tell **why** each one is there.
-A PolicyException keeps the policy clean and makes every exemption a separate,
-reviewable object — with its own owner, reason and expiry.
+You could add `legacy-app` to the policy itself. But then the policy gets
+longer with every special case, and nobody remembers **why** each one is
+there. A PolicyException keeps the policy clean. Each exception is a separate
+object that people can review, with its own owner, reason and end date.
 
 </details>
 
-Click **CHECK** once `legacy-app` is blocked and `web` is running.
+Click **CHECK** when `legacy-app` is blocked and `web` is running.

@@ -1,8 +1,8 @@
 # 3 · Dynamic messages & Warn
 
-`Warn` admits the resource but returns a warning to whoever created it — great
-for guiding users without blocking them. Combine it with `messageExpression` to
-build a **dynamic** message.
+`Warn` allows the resource but returns a warning to the person who created it.
+This is a good way to guide users without blocking them. Use it with
+`messageExpression` to build a **dynamic** message.
 
 ```
 cat <<EOF | kubectl apply -f -
@@ -25,7 +25,7 @@ spec:
 EOF
 ```{{exec}}
 
-Create a Pod without that label and watch the warning appear in the output:
+Create a Pod without that label and look for the warning in the output:
 
 ```
 kubectl run nginx-warn --image=nginx --labels=team=platform
@@ -36,12 +36,12 @@ kubectl run nginx-warn --image=nginx --labels=team=platform
 <br>
 
 `message` is a **fixed** text. `messageExpression` builds the text with CEL, so
-it can include live data from the resource.
+it can include data from the resource.
 
 Here, `object.metadata.name` is the name of the Pod being checked, so each
-warning names the exact Pod — for example *"Pod nginx-warn is missing ..."*.
+warning shows the exact Pod — for example *"Pod nginx-warn is missing ..."*.
 
-Use `message` for a fixed string, and `messageExpression` when you want details
+Use `message` for a fixed text, and `messageExpression` when you want details
 from the resource itself.
 
 </details>

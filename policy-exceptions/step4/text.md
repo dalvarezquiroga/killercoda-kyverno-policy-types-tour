@@ -1,13 +1,13 @@
-# 4 · Challenge — exempt a namespace
+# 4 · Challenge — skip a whole namespace
 
-Now write an exception yourself. The `sandbox` namespace is a playground where
-developers try things out quickly, and the platform team agreed that Pods there
+Now write an exception yourself. Developers use the `sandbox` namespace as a
+test area to try things quickly. The platform team agreed that Pods there
 don't need a `team` label.
 
-**Goal:** a `PolicyException` that exempts **every Pod in the `sandbox`
-namespace** from `require-team-label` — and nothing outside it.
+**Goal:** a `PolicyException` that lets **every Pod in the `sandbox`
+namespace** skip `require-team-label` — and no Pod outside it.
 
-Write and apply your exception, then test it with server-side dry-runs:
+Write and apply your exception. Then test it with server-side dry-runs:
 
 ```
 kubectl run sandbox-test -n sandbox --image=nginx --dry-run=server
@@ -17,20 +17,21 @@ kubectl run sandbox-test -n sandbox --image=nginx --dry-run=server
 kubectl run default-test --image=nginx --dry-run=server
 ```{{exec}}
 
-The first must be **allowed**, the second still **blocked**.
+The first must be **allowed**, and the second must still be **blocked**.
 
 <details><summary>Tip</summary>
 
 <br>
 
-- Reuse the shape of `allow-legacy-app` from Step 2.
-- Where must the exception **live** for Kyverno to read it? (Remember Step 3.)
-- Match on the Pod's namespace instead of its name:
+- Use the same structure as `allow-legacy-app` from Step 2.
+- In which namespace must the exception be for Kyverno to read it? (Remember
+  Step 3.)
+- Match the Pod's namespace instead of its name:
   `object.metadata.namespace == 'sandbox'`.
-- Kyverno reloads the policy when an exception is created — if the first test
-  is still blocked, wait a couple of seconds and retry.
-- Prefer a scaffold? A starter file is at `~/challenge.yaml` — edit it
-  (`vim ~/challenge.yaml`) and apply with `kubectl apply -f ~/challenge.yaml`.
+- Kyverno reloads the policy when an exception is created. If the first test
+  is still blocked, wait a few seconds and try again.
+- Want a starting point? There is a starter file at `~/challenge.yaml`. Edit it
+  (`vim ~/challenge.yaml`) and apply it with `kubectl apply -f ~/challenge.yaml`.
 
 </details>
 
@@ -61,5 +62,5 @@ Reference: [Kyverno Policy Exceptions docs](https://kyverno.io/docs/guides/excep
 
 </details>
 
-Click **CHECK** when Pods in `sandbox` are allowed and Pods elsewhere are still
-blocked.
+Click **CHECK** when Pods in `sandbox` are allowed and Pods in other
+namespaces are still blocked.

@@ -1,7 +1,8 @@
-# 2 · Completed Jobs, age & propagation
+# 2 · Delete finished Jobs and their Pods
 
-Finished Jobs pile up fast. Let's delete Jobs that have **completed** and are
-**older than 30 seconds** — and make sure their Pods go with them.
+Finished Jobs stay in the cluster until someone deletes them. Let's delete
+Jobs that are **complete** and **older than 30 seconds** — and make sure their
+Pods are deleted too.
 
 ```
 cat <<EOF | kubectl apply -f -
@@ -31,17 +32,17 @@ spec:
 EOF
 ```{{exec}}
 
-<details><summary>Info: age-based conditions with time.now()</summary>
+<details><summary>Info: conditions based on age, with time.now()</summary>
 
 <br>
 
-Kyverno's CEL libraries add `time.now()`. Subtracting the resource's
-`creationTimestamp` gives its age as a `duration`, which you compare against a
-threshold. Both conditions must be `true`, so a Job is deleted only when it is
-**complete AND old enough**.
+Kyverno adds `time.now()` to CEL. If you subtract the resource's
+`creationTimestamp` from it, you get the resource's age as a `duration`. Then
+you compare it with a limit. Both conditions must be `true`, so a Job is
+deleted only when it is **complete AND old enough**.
 
-We use `30s` so the lab moves fast — in real life you'd pick something like
-`duration('24h')`.
+We use `30s` so the lab is quick. In a real cluster you would use something
+like `duration('24h')`.
 
 </details>
 
@@ -49,24 +50,24 @@ We use `30s` so the lab moves fast — in real life you'd pick something like
 
 <br>
 
-It controls what happens to the **dependents** of a deleted resource (a Job's
-Pods, a Deployment's ReplicaSets...):
+It controls what happens to the **dependents** of a deleted resource — the
+resources it owns, like a Job's Pods or a Deployment's ReplicaSets:
 
 | Value | Effect |
 |-------|--------|
-| `Background` | Delete the owner now; the garbage collector removes dependents right after |
-| `Foreground` | Delete dependents first, then the owner |
-| `Orphan` | Delete the owner only; dependents are left behind |
+| `Background` | Delete the owner now; Kubernetes deletes the dependents right after |
+| `Foreground` | Delete the dependents first, then the owner |
+| `Orphan` | Delete only the owner; the dependents stay |
 
-If you leave it out, the API server's default applies — and for `batch/v1`
-Jobs that default is **orphan**, so the Job's Pods would stay behind. That's why
-this policy sets `Background` explicitly.
+If you don't set it, the API server uses its default. For `batch/v1` Jobs that
+default is **orphan**, so the Job's Pods would stay. That's why this policy
+sets `Background`.
 
 </details>
 
 <br>
 
-Run a short Job in `demo` and wait for it to complete:
+Run a short Job in `demo` and wait until it completes:
 
 ```
 kubectl create job hello-job -n demo --image=busybox -- echo "hello from a job"
@@ -82,15 +83,15 @@ The Job and its finished Pod are still there:
 kubectl get jobs,pods -n demo
 ```{{exec}}
 
-Now wait for the policy to remove it (the Job must be older than 30s **and** the
-next scheduled run must come around — up to about two minutes):
+Now wait for the policy to delete it. The Job must be older than 30s **and**
+the next scheduled run must happen — this can take up to two minutes:
 
 ```
 kubectl wait --for=delete job/hello-job -n demo --timeout=180s
 ```{{exec}}
 
-Thanks to `Background` propagation, the Job's Pod is gone too (give it a few
-seconds if it is still terminating):
+Because of `Background` propagation, the Job's Pod is deleted too (if it still
+shows `Terminating`, wait a few seconds):
 
 ```
 kubectl get jobs,pods -n demo
@@ -100,21 +101,23 @@ kubectl get jobs,pods -n demo
 
 <br>
 
-`DeletingPolicy` is cluster-scoped. Its sibling **`NamespacedDeletingPolicy`**
-(short name `ndpol`) has the same fields but lives in a namespace and only
-deletes resources in that namespace — handy for letting namespace owners
-manage their own cleanup without cluster-admin rights.
+`DeletingPolicy` is cluster-scoped. There is also a namespaced version,
+**`NamespacedDeletingPolicy`** (short name `ndpol`). It has the same fields,
+but it lives in a namespace and only deletes resources in that namespace. This
+is useful when namespace owners want to manage their own cleanup without
+cluster-admin rights.
 
 </details>
 
-<details><summary>Tip: native TTL vs DeletingPolicy</summary>
+<details><summary>Tip: Kubernetes TTL vs DeletingPolicy</summary>
 
 <br>
 
-Kubernetes has a built-in `spec.ttlSecondsAfterFinished` for Jobs — but only if
-every Job author remembers to set it. A DeletingPolicy enforces cleanup
-**centrally**, for any kind, with any condition you can write in CEL.
+Kubernetes has a built-in field for Jobs, `spec.ttlSecondsAfterFinished`, but
+it only works if every Job author remembers to set it. A DeletingPolicy applies
+the cleanup **in one place**, for any kind, with any condition you can write in
+CEL.
 
 </details>
 
-Click **CHECK** once `hello-job` and its Pod are gone.
+Click **CHECK** when `hello-job` and its Pod are deleted.

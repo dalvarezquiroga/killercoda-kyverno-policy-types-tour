@@ -1,6 +1,6 @@
 {
   "title": "Kyverno MutatingPolicy (CEL)",
-  "description": "Inject defaults, labels and security settings into Kubernetes resources with CEL-based Kyverno MutatingPolicy — then write your own in the IDE.",
+  "description": "Add default values, labels and security settings to Kubernetes resources with CEL-based Kyverno MutatingPolicy — then write your own in the terminal.",
   "details": {
     "assets": {
       "host01": [

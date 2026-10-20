@@ -1,19 +1,19 @@
-# 1 · Enforce with Deny
+# 1 · Block with Deny
 
 > **Docs:** [ValidatingPolicy](https://kyverno.io/docs/policy-types/validating-policy/)
 
-A **ValidatingPolicy** decides whether a resource is admitted. The action lives
-in `spec.validationActions`:
+A **ValidatingPolicy** decides if Kubernetes accepts a resource. You choose
+what happens in `spec.validationActions`:
 
 | Action | Effect |
 |--------|--------|
 | `Deny`  | Blocks the request |
-| `Audit` | Allows it, records the violation in a PolicyReport |
-| `Warn`  | Allows it, returns a warning |
+| `Audit` | Allows it, and records the violation in a PolicyReport |
+| `Warn`  | Allows it, and returns a warning |
 
 <br>
 
-Create a policy that requires every Pod to carry a `team` label:
+Create a policy that requires every Pod to have a `team` label:
 
 ```
 cat <<EOF | kubectl apply -f -
@@ -40,23 +40,23 @@ EOF
 
 <br>
 
-A Pod might have **no labels at all**. If you read them directly, the expression
-can error out.
+A Pod might have **no labels at all**. If you read them directly, the
+expression can fail.
 
 `object.metadata.?labels.orValue([])` avoids that:
 
 - `.?labels` reads the labels **only if they exist**.
 - `.orValue([])` means "if there are none, use an empty list instead".
 
-So `'team' in ...` simply returns `false` for a Pod with no labels, instead of
-failing. Use this pattern whenever a field might be missing.
+So `'team' in ...` returns `false` for a Pod with no labels, instead of
+failing. Use this pattern every time a field might be missing.
 
 </details>
 
 <br>
 
-List the policy you just created, and browse the whole family of CEL policy
-types (their names, API group and scope):
+List the policy you just created, and see all the CEL policy types (their
+names, API group and scope):
 
 ```
 kubectl get validatingpolicy
@@ -74,10 +74,10 @@ Try to create a Pod **without** the label — it is blocked:
 kubectl run nginx-bad --image=nginx
 ```{{exec}}
 
-Now create a compliant Pod. It is allowed:
+Now create a Pod with the label. It is allowed:
 
 ```
 kubectl run nginx-team --image=nginx --labels=team=platform
 ```{{exec}}
 
-Click **CHECK** when the compliant Pod is created.
+Click **CHECK** when the Pod with the label is created.

@@ -2,8 +2,8 @@
 
 > **Docs:** [GeneratingPolicy](https://kyverno.io/docs/policy-types/generating-policy/)
 
-A **GeneratingPolicy** creates resources in response to a trigger. Here, every
-new Namespace gets a default ConfigMap. The downstream resource is a YAML
+A **GeneratingPolicy** creates resources when a trigger happens. Here, every
+new Namespace gets a default ConfigMap. The resource to create is a YAML
 template with CEL placeholders `(( ... ))`.
 
 ```
@@ -39,8 +39,8 @@ spec:
 EOF
 ```{{exec}}
 
-List the policy you just created, and browse the whole family of CEL policy
-types (their names, API group and scope):
+List the policy you just created, and see all the CEL policy types (their
+names, API group and scope):
 
 ```
 kubectl get generatingpolicy
@@ -56,14 +56,15 @@ Create a Namespace to trigger the policy:
 kubectl create namespace demo-app
 ```{{exec}}
 
-Generation is asynchronous — give it a few seconds, then look:
+Generation is asynchronous (it happens a moment later). Wait a few seconds,
+then look:
 
 ```
 kubectl get configmap default-config -n demo-app
 ```{{exec}}
 
 Now see **synchronize** in action. Delete the ConfigMap and watch Kyverno
-recreate it:
+create it again:
 
 ```
 kubectl delete configmap default-config -n demo-app
@@ -77,11 +78,11 @@ kubectl get configmap default-config -n demo-app -w
 
 <br>
 
-`synchronize.enabled: true` keeps the generated resource in lockstep with the
-policy — delete or edit it and Kyverno restores it. The `(( variables.nsName ))`
-placeholder is replaced with the name of the Namespace that triggered the
-policy.
+`synchronize.enabled: true` keeps the generated resource in sync with the
+policy: if you delete or edit it, Kyverno restores it. The
+`(( variables.nsName ))` placeholder is replaced with the name of the Namespace
+that triggered the policy.
 
 </details>
 
-Click **CHECK** once the ConfigMap exists in `demo-app`.
+Click **CHECK** when the ConfigMap exists in `demo-app`.

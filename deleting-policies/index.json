@@ -17,7 +17,7 @@
     },
     "steps": [
       {"title": "Scheduled cleanup of Pods", "text": "step1/text.md", "verify": "step1/verify.sh"},
-      {"title": "Completed Jobs, age & propagation", "text": "step2/text.md", "verify": "step2/verify.sh"},
+      {"title": "Delete finished Jobs and their Pods", "text": "step2/text.md", "verify": "step2/verify.sh"},
       {"title": "Challenge: expire ConfigMaps", "text": "step3/text.md", "verify": "step3/verify.sh"}
     ],
     "finish": {"text": "finish.md"}

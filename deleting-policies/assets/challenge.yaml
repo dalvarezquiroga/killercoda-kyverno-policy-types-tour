@@ -1,6 +1,6 @@
 # CHALLENGE: complete this DeletingPolicy so that, EVERY MINUTE, it deletes
-# ConfigMaps in the "demo" namespace labeled expired=true, and leaves every
-# other ConfigMap alone.
+# the ConfigMaps in the "demo" namespace with the label expired=true. All
+# other ConfigMaps must stay.
 #
 # Fill in the TODOs, then apply it:
 #   kubectl apply -f ~/challenge.yaml
@@ -23,7 +23,7 @@ spec:
         resources: ["TODO"]
   conditions:
     - name: is-expired
-      # TODO: write a CEL expression that is TRUE only for ConfigMaps labeled
-      #       expired=true.
+      # TODO: write a CEL expression that is TRUE only for ConfigMaps with the
+      #       label expired=true.
       # Hint: object.metadata.?labels.?expired.orValue('')
       expression: "false"

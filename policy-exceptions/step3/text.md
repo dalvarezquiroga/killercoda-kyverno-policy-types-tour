@@ -1,13 +1,13 @@
-# 3 · Governance: namespace & expiry
+# 3 · Who and until when: namespace & end date
 
-An exception is a hole in a policy, so **who** can create one — and for how
-long — matters as much as the policy itself.
+An exception opens a gap in a policy. So it is as important to control **who**
+can create one, and **for how long**, as it is to write the policy itself.
 
 ## Only one namespace counts
 
 This cluster accepts exceptions **only** from the `exceptions` namespace. What
-happens if someone creates one somewhere else? Try it in `default`, for a Pod
-called `batch-runner`:
+happens if someone creates one in another namespace? Try it in `default`, for a
+Pod called `batch-runner`:
 
 ```
 cat <<EOF | kubectl apply -f -
@@ -26,42 +26,44 @@ spec:
 EOF
 ```{{exec}}
 
-The API server **accepts** it, with no warning. But does it work? Test with a
-server-side dry-run (admission runs, nothing is created):
+The API server **accepts** it, with no warning. But does it work? Test it with
+a server-side dry-run (Kyverno checks the request, but nothing is created):
 
 ```
 kubectl run batch-runner --image=nginx --dry-run=server
 ```{{exec}}
 
-Still **blocked** — Kyverno only reads exceptions from the allowed namespace;
-anything elsewhere is **silently ignored**. Remove it:
+Still **blocked**. Kyverno only reads exceptions from the allowed namespace. It
+ignores all others, and it does not tell you. Delete it:
 
 ```
 kubectl delete policyexceptions.policies.kyverno.io allow-batch-runner -n default
 ```{{exec}}
 
-<details><summary>Info: turning the namespace into an approval gate</summary>
+<details><summary>Info: use the namespace as an approval step</summary>
 
 <br>
 
-On its own, the namespace setting just tells Kyverno where to look. Combine it
-with **RBAC** — only a small group (say, the platform team or your GitOps
-pipeline) may create `policyexceptions.policies.kyverno.io` in `exceptions` —
-and every exception in the cluster now goes through an approval step.
+On its own, the namespace setting only tells Kyverno where to look. Now add
+**RBAC**: only a small group (for example the platform team, or your GitOps
+pipeline) can create `policyexceptions.policies.kyverno.io` in `exceptions`.
+With that, every exception in the cluster needs their approval.
 
 </details>
 
 <br>
 
-## Time-boxed, documented exceptions
+## Exceptions with a reason and an end date
 
 A good exception says **why** it exists and **when** it ends:
 
-- `expiresAt` — an RFC 3339 date-time after which Kyverno no longer applies it.
-- `properties` — free-form metadata for reviewers and audits (reason, ticket,
-  approver...).
+- `expiresAt` — a date and time (RFC 3339 format). After it, Kyverno no longer
+  uses the exception.
+- `properties` — any extra information for reviewers and audits (reason,
+  ticket, approver...).
 
-Create the exception properly this time — in `exceptions`, expiring in 30 days:
+Now create the exception the right way — in `exceptions`, with an end date 30
+days from now:
 
 ```
 cat <<EOF | kubectl apply -f -
@@ -95,14 +97,14 @@ Now the dry-run is **allowed**:
 kubectl run batch-runner --image=nginx --dry-run=server
 ```{{exec}}
 
-<details><summary>Info: clean up expired exceptions</summary>
+<details><summary>Info: delete expired exceptions</summary>
 
 <br>
 
-Kyverno ignores an exception once `expiresAt` has passed, but the object itself
-stays in the cluster. Kyverno checks the date when it (re)loads a policy and its
-exceptions, so don't let expired ones linger — delete them. A **DeletingPolicy**
-can do it for you, for example every hour:
+Kyverno stops using an exception after its `expiresAt` date, but the object
+stays in the cluster. Kyverno also only checks the date when it (re)loads a
+policy and its exceptions. So don't keep expired exceptions — delete them. A
+**DeletingPolicy** can do this for you, for example every hour:
 
 ```
 apiVersion: policies.kyverno.io/v1
@@ -123,9 +125,9 @@ spec:
         timestamp(object.spec.expiresAt) < time.now()
 ```
 
-Remember the cleanup controller also needs RBAC to delete
+Remember that the cleanup controller also needs RBAC to delete
 `policyexceptions` (see the DeletingPolicy scenario).
 
 </details>
 
-Click **CHECK** once `batch-runner` is allowed by an exception in `exceptions`.
+Click **CHECK** when an exception in `exceptions` allows `batch-runner`.

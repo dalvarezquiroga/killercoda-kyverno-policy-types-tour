@@ -1,6 +1,6 @@
 # CHALLENGE: complete this MutatingPolicy so every new Pod automatically gets
 #   spec.securityContext.runAsNonRoot: true
-# injected by Kyverno.
+# added by Kyverno.
 #
 # Fill in the TODO, then apply it:
 #   kubectl apply -f ~/challenge.yaml

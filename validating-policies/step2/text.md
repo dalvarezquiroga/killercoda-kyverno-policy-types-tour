@@ -1,7 +1,7 @@
 # 2 · Report with Audit
 
-Blocking is not always what you want. Switch the **same** policy to `Audit`:
-non-compliant Pods are admitted, but every violation is recorded in a
+You don't always want to block. Switch the **same** policy to `Audit`: Pods
+that break the rule are allowed, but every violation is recorded in a
 **PolicyReport**.
 
 ```
@@ -15,20 +15,21 @@ Create a Pod without the `team` label — this time it is **allowed**:
 kubectl run nginx-audit --image=nginx
 ```{{exec}}
 
-Pods from `kubectl run` land in the `default` namespace, and Kyverno records the
-report right there:
+Pods from `kubectl run` go to the `default` namespace, and Kyverno creates the
+report in that same namespace:
 
 ```
 kubectl get policyreport -n default
 ```{{exec}}
 
-You'll get one row per Pod, for example:
+You'll see one row per Pod, for example:
 
 - **nginx-team** (from Step 1, has the label) → `PASS 1`
 - **nginx-audit** (no label) → `FAIL 1`
 
-Audit never blocks, but it clearly records who complies and who doesn't — handy
-for measuring impact before you switch a policy to `Deny`.
+Audit never blocks, but it clearly shows which Pods follow the rule and which
+don't. This is useful to measure the impact before you switch a policy to
+`Deny`.
 
 Look at the failing entry in detail:
 
@@ -36,15 +37,15 @@ Look at the failing entry in detail:
 kubectl get policyreport -n default -o yaml | grep -A5 require-team-label
 ```{{exec}}
 
-<details><summary>Tip: where PolicyReports live</summary>
+<details><summary>Tip: where PolicyReports are created</summary>
 
 <br>
 
-A PolicyReport is created **in the same namespace as the resource** it describes
-— not in the `kyverno` namespace. Cluster-scoped resources use a
-`ClusterPolicyReport` instead. Reports are produced by the **reports
-controller** and may take a few seconds to appear.
+A PolicyReport is created **in the same namespace as the resource** it is
+about — not in the `kyverno` namespace. Cluster-scoped resources use a
+`ClusterPolicyReport` instead. The **reports controller** creates the reports,
+and they can take a few seconds to appear.
 
 </details>
 
-Click **CHECK** once the PolicyReport exists.
+Click **CHECK** when the PolicyReport exists.

@@ -2,15 +2,15 @@
 
 > **Docs:** [Policy Exceptions](https://kyverno.io/docs/guides/exceptions/)
 
-A **PolicyException** has two key parts:
+A **PolicyException** has two main parts:
 
 | Field | Purpose |
 |-------|---------|
 | `policyRefs` | **Which** policy to skip — by `name` and `kind` |
 | `matchConditions` | **For which** resources — CEL expressions; all must be `true` |
 
-Exempt `legacy-app` — and nothing else — from `require-team-label`. Note the
-namespace: in this lab, exceptions are only accepted from `exceptions`.
+Let `legacy-app` — and nothing else — skip `require-team-label`. Look at the
+namespace: in this lab, Kyverno only accepts exceptions from `exceptions`.
 
 ```
 cat <<EOF | kubectl apply -f -
@@ -29,16 +29,16 @@ spec:
 EOF
 ```{{exec}}
 
-Now the same command from Step 1 succeeds:
+Now the same command from Step 1 works:
 
 ```
 kubectl run legacy-app --image=nginx
 ```{{exec}}
 
-> Still blocked? Kyverno reloads the policy as soon as the exception is created —
-> give it a couple of seconds and run the command again.
+> Still blocked? Kyverno reloads the policy when the exception is created.
+> Wait a few seconds and run the command again.
 
-Any **other** unlabeled Pod is still blocked:
+Any **other** Pod without the label is still blocked:
 
 ```
 kubectl run another-app --image=nginx
@@ -46,17 +46,17 @@ kubectl run another-app --image=nginx
 
 <br>
 
-## Listing exceptions — mind the name
+## Listing exceptions — careful with the name
 
 There are **two** kinds called `PolicyException`: the CEL one you just used,
-and the deprecated legacy one from `kyverno.io`. See for yourself:
+and an old, deprecated one from `kyverno.io`. See for yourself:
 
 ```
 kubectl api-resources | grep -i exception
 ```{{exec}}
 
-The short name `polex` belongs to the **legacy** kind. Use the full resource
-name to list the CEL exceptions:
+The short name `polex` belongs to the **old** kind. To list the CEL
+exceptions, use the full resource name:
 
 ```
 kubectl get policyexceptions.policies.kyverno.io -A
@@ -66,8 +66,9 @@ kubectl get policyexceptions.policies.kyverno.io -A
 
 ## The skip is reported
 
-An exception doesn't hide anything: the PolicyReport for `legacy-app` records a
-`skip` result naming the exception (reports may take a few seconds):
+An exception doesn't hide anything. The PolicyReport for `legacy-app` records
+a `skip` result with the name of the exception (reports can take a few seconds
+to appear):
 
 ```
 kubectl get policyreport -n default
@@ -79,12 +80,13 @@ kubectl get policyreport -n default -o yaml | grep -B10 -A3 "result: skip"
 
 Look for `properties.exceptions: allow-legacy-app`.
 
-<details><summary>Tip: write narrow match conditions</summary>
+<details><summary>Tip: keep match conditions small</summary>
 
 <br>
 
-An exception should match **as little as possible**. Matching by name is a good
-start; combine conditions for even tighter scope, for example:
+An exception should match **as few resources as possible**. Matching by name is
+a good start. You can combine conditions to make it even more specific, for
+example:
 
 ```
 - name: only-legacy-app-in-default
@@ -95,4 +97,4 @@ start; combine conditions for even tighter scope, for example:
 
 </details>
 
-Click **CHECK** once `legacy-app` is running.
+Click **CHECK** when `legacy-app` is running.

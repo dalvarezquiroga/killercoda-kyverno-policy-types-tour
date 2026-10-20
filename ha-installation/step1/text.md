@@ -10,9 +10,9 @@ kubectl get nodes -o wide
 
 <br>
 
-Kyverno is made of **four controllers**, each its own Deployment. In HA you set
-the replica count **per controller**. Install Kyverno **v1.19** (chart `3.9.1`)
-with the replica counts from the docs:
+Kyverno has **four controllers**, and each one is a separate Deployment. In HA
+you set the number of replicas **for each controller**. Install Kyverno
+**v1.19** (chart `3.9.1`) with the replica numbers from the docs:
 
 ```
 helm install kyverno kyverno/kyverno \
@@ -25,7 +25,7 @@ helm install kyverno kyverno/kyverno \
   --wait --timeout 8m
 ```{{exec}}
 
-This takes a few minutes: `--wait` returns only when every replica is ready.
+This takes a few minutes: `--wait` only finishes when every replica is ready.
 
 <details><summary>Info: why these numbers?</summary>
 
@@ -33,16 +33,16 @@ This takes a few minutes: `--wait` returns only when every replica is ready.
 
 | Controller | Replicas | Why |
 |------------|----------|-----|
-| Admission | 3 | Serves the webhooks from **every** replica — more replicas give availability **and** throughput. Three is the minimum the HA guide recommends. |
-| Background | 2 | Runs generate / mutate-existing. One leader does the work, the other is a hot standby. |
-| Cleanup | 2 | Runs DeletingPolicies. Its deletions are done by the leader; the standby takes over on failure. |
-| Reports | 2 | Builds PolicyReports. One leader, one standby. |
+| Admission | 3 | **Every** replica answers webhook requests. More replicas means it stays available **and** can handle more requests. Three is the minimum the HA guide recommends. |
+| Background | 2 | Runs generate and mutate-existing policies. One leader does the work; the other is a backup, ready to take over. |
+| Cleanup | 2 | Runs DeletingPolicies. The leader does the deleting; the backup takes over if it fails. |
+| Reports | 2 | Creates PolicyReports. One leader, one backup. |
 
 </details>
 
 <br>
 
-Check the four Deployments — `READY` should match the replica counts:
+Check the four Deployments — `READY` should match the number of replicas:
 
 ```
 kubectl get deploy -n kyverno
@@ -52,7 +52,7 @@ kubectl get deploy -n kyverno
 
 <br>
 
-In real life you'd keep this in Git instead of a long command line:
+In a real cluster you would keep this in Git instead of a long command:
 
 ```
 admissionController:
@@ -65,8 +65,8 @@ reportsController:
   replicas: 2
 ```
 
-and install with `helm install kyverno kyverno/kyverno -n kyverno --create-namespace -f values.yaml`.
+and install it with `helm install kyverno kyverno/kyverno -n kyverno --create-namespace -f values.yaml`.
 
 </details>
 
-Click **CHECK** once every Deployment is fully ready.
+Click **CHECK** when every Deployment is fully ready.

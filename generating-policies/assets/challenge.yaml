@@ -1,5 +1,5 @@
 # CHALLENGE: complete this GeneratingPolicy so that EVERY new Namespace
-# automatically gets a default-deny NetworkPolicy named "default-deny".
+# gets a default-deny NetworkPolicy named "default-deny" automatically.
 #
 # Fill in the TODO in the template, then apply it:
 #   kubectl apply -f ~/challenge.yaml

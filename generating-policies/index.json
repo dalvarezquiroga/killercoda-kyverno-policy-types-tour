@@ -1,6 +1,6 @@
 {
   "title": "Kyverno GeneratingPolicy (CEL)",
-  "description": "Generate ConfigMaps, quotas and NetworkPolicies for new namespaces with CEL-based Kyverno GeneratingPolicy — then write your own in the IDE.",
+  "description": "Generate ConfigMaps, quotas and NetworkPolicies for new namespaces with CEL-based Kyverno GeneratingPolicy — then write your own in the terminal.",
   "details": {
     "assets": {
       "host01": [
@@ -17,7 +17,7 @@
     },
     "steps": [
       {"title": "Generate a ConfigMap & synchronize", "text": "step1/text.md", "verify": "step1/verify.sh"},
-      {"title": "Generate a ResourceQuota (and RBAC)", "text": "step2/text.md", "verify": "step2/verify.sh"},
+      {"title": "Generate a ResourceQuota (and the RBAC problem)", "text": "step2/text.md", "verify": "step2/verify.sh"},
       {"title": "Challenge: default-deny NetworkPolicy", "text": "step3/text.md", "verify": "step3/verify.sh"}
     ],
     "finish": {"text": "finish.md"}

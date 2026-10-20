@@ -2,23 +2,23 @@
 
 Here's what you learned today — the CEL-based **ValidatingPolicy**:
 
-- **Deny** to block, **Audit** to report, **Warn** to nudge.
-- `matchConstraints.resourceRules` to scope what a policy sees.
-- Safe CEL with optional accessors (`object.metadata.?labels.orValue([])`).
-- Dynamic feedback with `variables` + `messageExpression`.
+- **Deny** to block, **Audit** to report, **Warn** to guide.
+- `matchConstraints.resourceRules` to choose what a policy checks.
+- Safe CEL with optional fields (`object.metadata.?labels.orValue([])`).
+- Dynamic messages with `messageExpression`.
 - **PolicyReports** to review Audit violations.
 - And you wrote your own policy to block the `:latest` tag.
 
-## Tips & common pitfalls
+## Tips & common mistakes
 
-- **Null fields:** a Pod may have no `labels` at all. Use the optional accessor
-  `object.metadata.?labels.orValue([])` so your expression never errors.
-- **Roll out safely:** start a new rule in `Audit`, review the PolicyReports,
+- **Missing fields:** a Pod may have no `labels` at all. Use
+  `object.metadata.?labels.orValue([])` so your expression never fails.
+- **Start safely:** start a new rule in `Audit`, review the PolicyReports,
   then switch to `Deny`.
-- **Reports live with the resource:** a Pod's PolicyReport is in the Pod's
+- **Reports are next to the resource:** a Pod's PolicyReport is in the Pod's
   namespace, not in `kyverno`.
-- **Expressions are boolean:** the resource is allowed only when every
-  `validations[].expression` evaluates to `true`.
+- **Expressions return true or false:** the resource is allowed only when every
+  `validations[].expression` returns `true`.
 
 ## Learn more
 
@@ -26,7 +26,7 @@ Here's what you learned today — the CEL-based **ValidatingPolicy**:
 - Policy types overview: https://kyverno.io/docs/policy-types/
 - Migration to CEL: https://kyverno.io/docs/guides/migration-to-cel/
 
-> These docs follow the current Kyverno release. This lab targets **v1.19** — if
-> you land on a newer version, use the **Select version** menu on kyverno.io.
+> These docs follow the current Kyverno release. This lab uses **v1.19** — if
+> you are on a newer version, use the **Select version** menu on kyverno.io.
 
-Next up: **MutatingPolicy** — change resources on the fly.
+Next up: **MutatingPolicy** — change resources as they are created.

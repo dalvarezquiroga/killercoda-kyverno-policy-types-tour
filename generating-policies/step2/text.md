@@ -1,20 +1,22 @@
-# 2 · Generate a ResourceQuota (and the RBAC gotcha)
+# 2 · Generate a ResourceQuota (and the RBAC problem)
 
-The same template mechanism can generate **any** kind — as long as Kyverno is
-allowed to create it. This is the single most common GeneratingPolicy problem.
+The same template can generate **any** kind — but only if Kyverno is allowed
+to create it. This is the most common GeneratingPolicy problem.
 
-## The RBAC gotcha
+## The RBAC problem
 
-Kyverno's **background controller** creates generated resources. By default it
-only has *read* access, so generating a new kind fails silently until you grant
-write access. You add it by aggregating a ClusterRole with this label:
+Kyverno's **background controller** creates the generated resources. By
+default it only has *read* access. So if you generate a new kind, it fails,
+and you see no error, until you give it write access. To do that, create a
+ClusterRole with this label (an *aggregated* ClusterRole: Kubernetes adds its
+rules to the background controller's role):
 
 ```
 rbac.kyverno.io/aggregate-to-background-controller: "true"
 ```
 
-That RBAC was already applied for you during setup (for ConfigMaps,
-ResourceQuotas and NetworkPolicies). Take a look:
+The setup already created this ClusterRole for you (for ConfigMaps,
+ResourceQuotas and NetworkPolicies). Look at it:
 
 ```
 kubectl get clusterrole kyverno:generate-extra -o yaml
@@ -68,33 +70,34 @@ kubectl create namespace demo-quota
 kubectl get resourcequota default-quota -n demo-quota
 ```{{exec}}
 
-<details><summary>Tip: how to debug a missing generated resource</summary>
+<details><summary>Tip: what to check when a generated resource is missing</summary>
 
 <br>
 
-If a generated resource never appears, check the background controller logs and
-confirm RBAC:
+If a generated resource never appears, check the background controller logs
+and the RBAC:
 
 ```
 kubectl -n kyverno logs deploy/kyverno-background-controller | grep -i forbidden
 ```
 
-A `forbidden` error means you are missing an aggregated ClusterRole for that
-kind.
+A `forbidden` error means that an aggregated ClusterRole for that kind is
+missing.
 
 </details>
 
-<details><summary>Tip: don't reinvent the wheel — Kyverno sample policies</summary>
+<details><summary>Tip: use ready-made Kyverno sample policies</summary>
 
 <br>
 
-Kyverno publishes a **catalog of ready-made, community-maintained policies** you
-can copy and adapt. This exact "quota per namespace" idea is there:
+Kyverno publishes a **catalog of ready-made policies**, maintained by the
+community, that you can copy and adapt. This same "quota per namespace" idea
+is there:
 [Add Quota](https://kyverno.io/policies/best-practices-gpol/add-ns-quota/add-ns-quota/)
 (it also adds a `LimitRange`).
 
-Browse the whole library at [kyverno.io/policies](https://kyverno.io/policies/).
+See the whole catalog at [kyverno.io/policies](https://kyverno.io/policies/).
 
 </details>
 
-Click **CHECK** once the ResourceQuota exists in `demo-quota`.
+Click **CHECK** when the ResourceQuota exists in `demo-quota`.
