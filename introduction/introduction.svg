@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 200" role="img" aria-label="Kyverno Introduction">
+  <rect width="720" height="200" rx="14" fill="#0b1324"/>
+  <text x="360" y="42" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff">Kyverno · Introduction</text>
+
+  <rect x="40" y="72" width="180" height="98" rx="10" fill="#1f2a44"/>
+  <text x="130" y="112" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#ffffff">Request</text>
+  <text x="130" y="140" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#cbd5e1">kubectl → API server</text>
+
+  <text x="245" y="128" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="24" fill="#14919b">→</text>
+
+  <rect x="270" y="72" width="180" height="98" rx="10" fill="#14919b"/>
+  <text x="360" y="112" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#ffffff">Kyverno</text>
+  <text x="360" y="140" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#e6fbff">Policies as YAML + CEL</text>
+
+  <text x="475" y="128" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="24" fill="#14919b">→</text>
+
+  <rect x="500" y="72" width="180" height="98" rx="10" fill="#1f2a44"/>
+  <text x="590" y="112" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#ffffff">Result</text>
+  <text x="590" y="140" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#cbd5e1">Allow · Change · Report</text>
+</svg>

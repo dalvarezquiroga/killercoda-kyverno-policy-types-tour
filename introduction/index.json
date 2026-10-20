@@ -1,0 +1,24 @@
+{
+  "title": "Kyverno Introduction",
+  "description": "What Kyverno is and how it works: install it, explore its controllers, CRDs and webhooks, and see how a request reaches it.",
+  "details": {
+    "assets": {
+      "host01": [
+        {"file": "init.sh", "target": "/ks", "chmod": "+x"},
+        {"file": "wait-init.sh", "target": "/ks", "chmod": "+x"}
+      ]
+    },
+    "intro": {
+      "text": "intro.md",
+      "background": "init/background.sh",
+      "foreground": "init/foreground.sh"
+    },
+    "steps": [
+      {"title": "Install Kyverno", "text": "step1/text.md", "verify": "step1/verify.sh"},
+      {"title": "The parts of Kyverno", "text": "step2/text.md", "verify": "step2/verify.sh"},
+      {"title": "How a request reaches Kyverno", "text": "step3/text.md", "verify": "step3/verify.sh"}
+    ],
+    "finish": {"text": "finish.md"}
+  },
+  "backend": {"imageid": "kubernetes-kubeadm-1node"}
+}

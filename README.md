@@ -7,13 +7,15 @@ Interactive [Killercoda](https://killercoda.com/) scenarios that teach the new
 
 ## Scenarios
 
-A course in six parts. Each one is a hands-on lab in the terminal, with guided
-steps that are checked for you. The policy scenarios end with a **challenge**
-you solve yourself (with Tip and Solution hints if you need help). The HA
-scenario ends with a failure test.
+A course in seven parts. Each one is a hands-on lab in the terminal, with
+guided steps that are checked for you. It starts with an introduction to
+Kyverno. The policy scenarios end with a **challenge** you solve yourself (with
+Tip and Solution hints if you need help). The HA scenario ends with a failure
+test.
 
 | Scenario | What you learn |
 |----------|----------------|
+| [`introduction`](./introduction) | What Kyverno is and how it works: install it with Helm, explore its four controllers, CRDs and webhook certificates, and see how a request reaches Kyverno through admission webhooks. |
 | [`validating-policies`](./validating-policies) | Allow, audit or warn on resources with `ValidatingPolicy`: `Deny` / `Audit` / `Warn`, safe CEL, dynamic messages, PolicyReports. Challenge: block the `:latest` tag. |
 | [`mutating-policies`](./mutating-policies) | Change resources as they are created with `MutatingPolicy`: `ApplyConfiguration` patches and conditional defaults. Challenge: add `runAsNonRoot`. |
 | [`generating-policies`](./generating-policies) | Create resources from a trigger with `GeneratingPolicy`: synchronize, CEL templates, and the background controller RBAC problem. Challenge: a default-deny NetworkPolicy. |
@@ -22,8 +24,8 @@ scenario ends with a failure test.
 | [`ha-installation`](./ha-installation) | Install Kyverno in high availability on a 2-node cluster: replicas per controller, anti-affinity, leader election Leases, PodDisruptionBudgets, and a failure test. |
 
 Each scenario uses a fixed Kyverno version (**v1.19**, chart `3.9.1`) on a
-single-node Kubernetes cluster. The exception is `ha-installation`: it runs on
-two nodes, and you install Kyverno yourself. Docs links point to the current
+single-node Kubernetes cluster. In `introduction` and `ha-installation` you
+install Kyverno yourself, and `ha-installation` runs on two nodes. Docs links point to the current
 Kyverno release — if you are on a newer one, use the *Select version* menu on
 kyverno.io.
 
