@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 200" role="img" aria-label="Kyverno High Availability">
+  <rect width="720" height="200" rx="14" fill="#0b1324"/>
+  <text x="360" y="42" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="23" font-weight="700" fill="#ffffff">Kyverno · High Availability</text>
+
+  <rect x="30" y="72" width="150" height="98" rx="10" fill="#14919b"/>
+  <text x="105" y="112" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#ffffff">Admission</text>
+  <text x="105" y="140" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#e6fbff">× 3 · active/active</text>
+
+  <rect x="200" y="72" width="150" height="98" rx="10" fill="#1f2a44"/>
+  <text x="275" y="112" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#ffffff">Background</text>
+  <text x="275" y="140" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#cbd5e1">× 2 · leader</text>
+
+  <rect x="370" y="72" width="150" height="98" rx="10" fill="#1f2a44"/>
+  <text x="445" y="112" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#ffffff">Cleanup</text>
+  <text x="445" y="140" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#cbd5e1">× 2 · leader</text>
+
+  <rect x="540" y="72" width="150" height="98" rx="10" fill="#1f2a44"/>
+  <text x="615" y="112" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" fill="#ffffff">Reports</text>
+  <text x="615" y="140" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#cbd5e1">× 2 · leader</text>
+</svg>
