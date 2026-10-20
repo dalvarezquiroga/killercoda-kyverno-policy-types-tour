@@ -1,0 +1,29 @@
+# CHALLENGE: complete this DeletingPolicy so that, EVERY MINUTE, it deletes
+# ConfigMaps in the "demo" namespace labeled expired=true, and leaves every
+# other ConfigMap alone.
+#
+# Fill in the TODOs, then apply it:
+#   kubectl apply -f ~/challenge.yaml
+#
+apiVersion: policies.kyverno.io/v1
+kind: DeletingPolicy
+metadata:
+  name: cleanup-expired-configmaps
+spec:
+  # TODO: run every minute (cron format)
+  schedule: "TODO"
+  matchConstraints:
+    namespaceSelector:
+      matchLabels:
+        kubernetes.io/metadata.name: demo
+    resourceRules:
+      # TODO: match ConfigMaps (core API group "", version v1)
+      - apiGroups: ["TODO"]
+        apiVersions: ["v1"]
+        resources: ["TODO"]
+  conditions:
+    - name: is-expired
+      # TODO: write a CEL expression that is TRUE only for ConfigMaps labeled
+      #       expired=true.
+      # Hint: object.metadata.?labels.?expired.orValue('')
+      expression: "false"

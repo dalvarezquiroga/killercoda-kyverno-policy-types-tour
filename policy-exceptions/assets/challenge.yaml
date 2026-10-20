@@ -1,0 +1,23 @@
+# CHALLENGE: complete this PolicyException so that EVERY Pod in the "sandbox"
+# namespace skips the require-team-label policy, and Pods anywhere else are
+# still checked.
+#
+# Fill in the TODOs, then apply it:
+#   kubectl apply -f ~/challenge.yaml
+#
+apiVersion: policies.kyverno.io/v1
+kind: PolicyException
+metadata:
+  name: allow-sandbox
+  # TODO: in which namespace does this cluster accept exceptions?
+  namespace: TODO
+spec:
+  policyRefs:
+    - name: require-team-label
+      kind: ValidatingPolicy
+  matchConditions:
+    - name: only-sandbox
+      # TODO: write a CEL expression that is TRUE only for resources in the
+      #       "sandbox" namespace.
+      # Hint: object.metadata.namespace
+      expression: "false"

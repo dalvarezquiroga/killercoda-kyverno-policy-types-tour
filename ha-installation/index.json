@@ -1,0 +1,24 @@
+{
+  "title": "Kyverno High Availability",
+  "description": "Install Kyverno in high availability on a 2-node cluster, see how each controller fails over, and survive a failure drill.",
+  "details": {
+    "assets": {
+      "host01": [
+        {"file": "init.sh", "target": "/ks", "chmod": "+x"},
+        {"file": "wait-init.sh", "target": "/ks", "chmod": "+x"}
+      ]
+    },
+    "intro": {
+      "text": "intro.md",
+      "background": "init/background.sh",
+      "foreground": "init/foreground.sh"
+    },
+    "steps": [
+      {"title": "Install Kyverno in HA", "text": "step1/text.md", "verify": "step1/verify.sh"},
+      {"title": "Replicas, nodes & leaders", "text": "step2/text.md", "verify": "step2/verify.sh"},
+      {"title": "PDBs & a failure drill", "text": "step3/text.md", "verify": "step3/verify.sh"}
+    ],
+    "finish": {"text": "finish.md"}
+  },
+  "backend": {"imageid": "kubernetes-kubeadm-2nodes"}
+}

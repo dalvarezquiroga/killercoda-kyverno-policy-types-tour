@@ -1,0 +1,26 @@
+{
+  "title": "Kyverno DeletingPolicy (CEL)",
+  "description": "Clean up Pods, Jobs and ConfigMaps on a schedule with CEL-based Kyverno DeletingPolicy — then write your own.",
+  "details": {
+    "assets": {
+      "host01": [
+        {"file": "init.sh", "target": "/ks", "chmod": "+x"},
+        {"file": "wait-init.sh", "target": "/ks", "chmod": "+x"},
+        {"file": "solution.sh", "target": "/var/run/kc-internal", "chmod": "+x"},
+        {"file": "challenge.yaml", "target": "~/", "chmod": "+w"}
+      ]
+    },
+    "intro": {
+      "text": "intro.md",
+      "background": "init/background.sh",
+      "foreground": "init/foreground.sh"
+    },
+    "steps": [
+      {"title": "Scheduled cleanup of Pods", "text": "step1/text.md", "verify": "step1/verify.sh"},
+      {"title": "Completed Jobs, age & propagation", "text": "step2/text.md", "verify": "step2/verify.sh"},
+      {"title": "Challenge: expire ConfigMaps", "text": "step3/text.md", "verify": "step3/verify.sh"}
+    ],
+    "finish": {"text": "finish.md"}
+  },
+  "backend": {"imageid": "kubernetes-kubeadm-1node"}
+}
