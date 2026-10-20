@@ -2,6 +2,9 @@
   "items": [
     { "path": "validating-policies" },
     { "path": "mutating-policies" },
-    { "path": "generating-policies" }
+    { "path": "generating-policies" },
+    { "path": "deleting-policies" },
+    { "path": "policy-exceptions" },
+    { "path": "ha-installation" }
   ]
 }
